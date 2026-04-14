@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tai Chi Treningsapp</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    padding: 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
+  h1 {
+    text-align: center;
+    color: #4a5568;
+    margin-bottom: 8px;
+    font-size: 2em;
+  }
+  .subtitle {
+    text-align: center;
+    color: #718096;
+    margin-bottom: 24px;
+  }
+  .progress {
+    background: #e2e8f0;
+    border-radius: 20px;
+    height: 10px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .progress-bar {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .exercise {
+    text-align: center;
+  }
+  .exercise-number {
+    color: #764ba2;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .exercise-name {
+    font-size: 1.8em;
+    color: #2d3748;
+    margin-bottom: 12px;
+  }
+  .exercise-chinese {
+    color: #718096;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+  .exercise-description {
+    background: #f7fafc;
+    padding: 18px;
+    border-radius: 12px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    color: #4a5568;
+    text-align: left;
+  }
+  .timer {
+    font-size: 3.5em;
+    font-weight: 300;
+    color: #4a5568;
+    margin: 16px 0;
+  }
+  .buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  button {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-weight: 500;
+  }
+  button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  button.secondary {
+    background: #e2e8f0;
+    color: #4a5568;
+  }
+  .complete {
+    text-align: center;
+    padding: 20px;
+  }
+  .complete h2 {
+    color: #48bb78;
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tai Chi</h1>
+    <p class="subtitle">En rolig øktøkt med 6 øvelser</p>
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div id="content"></div>
+  </div>
+
+<script>
+  const exercises = [
+    {
+      name: "Åpne Tai Chi",
+      chinese: "起势 - Qǐ shì",
+      description: "Stå med føttene i skulderbredde. Pust rolig inn mens du hever armene sakte opp til skulderhøyde, håndflatene ned. Pust ut og senk armene.",
+      duration: 60
+    },
+    {
+      name: "Del den ville hestens manke",
+      chinese: "野马分鬃 - Yě mǎ fēn zōng",
+      description: "Flytt vekten til høyre ben, løft venstre ben og plasser det foran. Beveg armene som om du skiller en manke – en hånd opp, en ned. Gjenta på begge sider.",
+      duration: 90
+    },
+    {
+      name: "Tranen brer sine vinger",
+      chinese: "白鹤亮翅 - Bái hè liàng chì",
+      description: "Stå med vekten på bakre ben. Løft høyre hånd opp over hodet mens venstre hånd senkes ned ved hoften. Hold blikket rolig fremover.",
+      duration: 75
+    },
+    {
+      name: "Børst knær",
+      chinese: "搂膝拗步 - Lǒu xī ǎo bù",
+      description: "Tråkk frem med ett ben. Før den ene hånden forbi kneet i en bueformet bevegelse, mens den andre hånden skyves fremover i brysthøyde.",
+      duration: 90
+    },
+    {
+      name: "Spill pipa",
+      chinese: "手挥琵琶 - Shǒu huī pípá",
+      description: "Stå med vekten bak, fremre hæl lett hvilende. Løft armene som om du holder en pipa-lutt – høyre hånd foran, venstre i albuehøyde. Hold posisjonen og pust.",
+      duration: 60
+    },
+    {
+      name: "Avslutning",
+      chinese: "收势 - Shōu shì",
+      description: "Samle vekten jevnt på begge ben. Senk armene rolig ned langs sidene. Stå stille et øyeblikk, kjenn pusten og roen.",
+      duration: 60
+    }
+  ];
+
+  let currentIndex = 0;
+  let timeLeft = 0;
+  let timerId = null;
+  let isRunning = false;
+
+  const content = document.getElementById('content');
+  const progressBar = document.getElementById('progressBar');
+
+  function render() {
+    if (currentIndex >= exercises.length) {
+      content.innerHTML = `
+        <div class="complete">
+          <h2>Godt gjort!</h2>
+          <p style="margin-bottom: 20px; color: #4a5568;">Du har fullført alle 6 tai chi-øvelsene.</p>
+          <button onclick="restart()">Start på nytt</button>
+        </div>
+      `;
+      progressBar.style.width = '100%';
+      return;
+    }
+
+    const ex = exercises[currentIndex];
+    if (timeLeft === 0) timeLeft = ex.duration;
+
+    content.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-number">ØVELSE ${currentIndex + 1} AV ${exercises.length}</div>
+        <div class="exercise-name">${ex.name}</div>
+        <div class="exercise-chinese">${ex.chinese}</div>
+        <div class="exercise-description">${ex.description}</div>
+        <div class="timer" id="timer">${formatTime(timeLeft)}</div>
+        <div class="buttons">
+          <button id="toggleBtn" onclick="toggle()">${isRunning ? 'Pause' : 'Start'}</button>
+          <button class="secondary" onclick="next()">${currentIndex === exercises.length - 1 ? 'Fullfør' : 'Neste'}</button>
+        </div>
+      </div>
+    `;
+
+    const progress = (currentIndex / exercises.length) * 100;
+    progressBar.style.width = progress + '%';
+  }
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  }
+
+  function toggle() {
+    if (isRunning) {
+      clearInterval(timerId);
+      isRunning = false;
+      document.getElementById('toggleBtn').textContent = 'Start';
+    } else {
+      isRunning = true;
+      document.getElementById('toggleBtn').textContent = 'Pause';
+      timerId = setInterval(() => {
+        timeLeft--;
+        const timerEl = document.getElementById('timer');
+        if (timerEl) timerEl.textContent = formatTime(timeLeft);
+        if (timeLeft <= 0) {
+          clearInterval(timerId);
+          isRunning = false;
+          next();
+        }
+      }, 1000);
+    }
+  }
+
+  function next() {
+    clearInterval(timerId);
+    isRunning = false;
+    currentIndex++;
+    timeLeft = 0;
+    render();
+  }
+
+  function restart() {
+    currentIndex = 0;
+    timeLeft = 0;
+    isRunning = false;
+    clearInterval(timerId);
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>
