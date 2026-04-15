@@ -74,63 +74,27 @@
     align-items: center;
   }
   .illustration svg {
-    width: 220px;
-    height: 220px;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    width: 240px;
+    height: 240px;
+    filter: drop-shadow(0 6px 14px rgba(80, 40, 120, 0.15));
   }
-  /* Animations */
-  .tc-bg { animation: tc-glow 4s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
-  .tc-body { animation: tc-breathe 4s ease-in-out infinite; }
-  .tc-head { animation: tc-nod 4s ease-in-out infinite; }
-  .tc-chi { animation: tc-chi 3s ease-in-out infinite; }
-  .tc-lsleeve { animation: tc-swayL 3.5s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
-  .tc-rsleeve { animation: tc-swayR 3.5s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
-  .tc-lhand { animation: tc-handL 3.5s ease-in-out infinite; transform-box: fill-box; }
-  .tc-rhand { animation: tc-handR 3.5s ease-in-out infinite; transform-box: fill-box; }
-  .tc-yinyang { animation: tc-spin 18s linear infinite; transform-origin: center; transform-box: fill-box; }
-  .tc-bird { animation: tc-fly 5s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
-  .tc-lute { animation: tc-floaty 3.5s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
-  @keyframes tc-glow {
-    0%,100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 0.85; transform: scale(1.05); }
+  .tc-fig {
+    --robe: #f97316;
+    --dark: #c2410c;
+    --pants: #1e3a8a;
+    --belt: #b91c1c;
+    --skin: #fde68a;
+    --skin-d: #92400e;
+    --hair: #1a202c;
+    --halo: #fef3c7;
+    --chi-a: #a78bfa;
+    --chi-b: #f472b6;
   }
-  @keyframes tc-breathe {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-1.5px); }
-  }
-  @keyframes tc-nod {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-2px); }
-  }
-  @keyframes tc-chi {
-    0%,100% { opacity: 0.8; transform: translateY(0); }
-    50% { opacity: 0.2; transform: translateY(-4px); }
-  }
-  @keyframes tc-swayL {
-    0%,100% { transform: rotate(-2deg); }
-    50% { transform: rotate(4deg); }
-  }
-  @keyframes tc-swayR {
-    0%,100% { transform: rotate(2deg); }
-    50% { transform: rotate(-4deg); }
-  }
-  @keyframes tc-handL {
-    0%,100% { transform: translate(0,0); }
-    50% { transform: translate(2px,-3px); }
-  }
-  @keyframes tc-handR {
-    0%,100% { transform: translate(0,0); }
-    50% { transform: translate(-2px,-3px); }
-  }
-  @keyframes tc-spin { to { transform: rotate(360deg); } }
-  @keyframes tc-fly {
-    0%,100% { transform: translate(0,0) rotate(0); }
-    50% { transform: translate(-3px,-3px) rotate(-8deg); }
-  }
-  @keyframes tc-floaty {
-    0%,100% { transform: translateY(0) rotate(-2deg); }
-    50% { transform: translateY(-2px) rotate(3deg); }
-  }
+  .tc-fig.horsemane { --robe:#059669; --dark:#065f46; --halo:#fce7f3; --belt:#b45309; }
+  .tc-fig.crane     { --robe:#7c3aed; --dark:#5b21b6; --halo:#dbeafe; --belt:#fbbf24; }
+  .tc-fig.brushknee { --robe:#dc2626; --dark:#7f1d1d; --halo:#ecfdf5; --belt:#fbbf24; }
+  .tc-fig.pipa      { --robe:#0891b2; --dark:#155e75; --halo:#fef3c7; --belt:#b45309; }
+  .tc-fig.closing   { --robe:#db2777; --dark:#831843; --halo:#f3e8ff; --belt:#fbbf24; }
   .exercise-description {
     background: #f7fafc;
     padding: 18px;
@@ -196,123 +160,151 @@
   </div>
 
 <script>
-  // Colorful, lively tai chi master illustrations (180x180)
-  const illustrations = {
-    qishi: `<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-      <circle class="tc-bg" cx="90" cy="75" r="62" fill="#fef3c7" opacity="0.7"/>
-      <path d="M30 55 Q48 48 52 65" class="tc-chi" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="3,3" opacity="0.8"/>
-      <path d="M150 55 Q132 48 128 65" class="tc-chi" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="3,3" opacity="0.8"/>
-      <path d="M75 165 L78 115 L90 115 L88 165 Z" fill="#1e40af"/>
-      <path d="M105 165 L102 115 L90 115 L92 165 Z" fill="#1e40af"/>
-      <path d="M68 65 Q58 105 66 135 L114 135 Q122 105 112 65 Z" class="tc-body" fill="#f97316" stroke="#c2410c" stroke-width="1.5"/>
-      <rect x="66" y="102" width="48" height="6" fill="#b91c1c"/>
-      <path d="M68 65 Q48 68 32 78 L36 88 Q54 80 72 78 Z" class="tc-body" fill="#f97316" stroke="#c2410c" stroke-width="1.5"/>
-      <path d="M112 65 Q132 68 148 78 L144 88 Q126 80 108 78 Z" class="tc-body" fill="#f97316" stroke="#c2410c" stroke-width="1.5"/>
-      <circle cx="32" cy="82" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle cx="148" cy="82" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle class="tc-head" cx="90" cy="48" r="15" fill="#fde68a" stroke="#92400e" stroke-width="1.5"/>
-      <ellipse class="tc-head" cx="90" cy="32" rx="9" ry="6" fill="#1a202c"/>
-      <circle class="tc-head" cx="85" cy="47" r="1.3" fill="#1a202c"/>
-      <circle class="tc-head" cx="95" cy="47" r="1.3" fill="#1a202c"/>
-      <path class="tc-head" d="M85 54 Q90 57 95 54" stroke="#92400e" stroke-width="1.3" fill="none"/>
-    </svg>`,
-    horsemane: `<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-      <circle class="tc-bg" cx="90" cy="75" r="62" fill="#fce7f3" opacity="0.7"/>
-      <path d="M35 30 Q55 45 45 60" class="tc-chi" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="3,3" opacity="0.8"/>
-      <path d="M145 110 Q130 95 140 80" class="tc-chi" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="3,3" opacity="0.8"/>
-      <path d="M62 165 L72 118 L88 118 L78 165 Z" fill="#1e40af"/>
-      <path d="M118 165 L108 115 L92 115 L102 165 Z" fill="#1e40af"/>
-      <path d="M70 65 Q58 105 68 140 L112 140 Q120 105 110 65 Z" class="tc-body" fill="#059669" stroke="#065f46" stroke-width="1.5"/>
-      <rect x="66" y="104" width="50" height="6" fill="#b45309"/>
-      <path d="M72 68 Q55 55 38 42 L34 52 Q52 62 76 80 Z" class="tc-body" fill="#059669" stroke="#065f46" stroke-width="1.5"/>
-      <path d="M108 68 Q125 82 140 100 L134 108 Q118 92 104 82 Z" class="tc-body" fill="#059669" stroke="#065f46" stroke-width="1.5"/>
-      <circle cx="36" cy="46" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle cx="137" cy="104" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle class="tc-head" cx="90" cy="48" r="15" fill="#fde68a" stroke="#92400e" stroke-width="1.5"/>
-      <ellipse class="tc-head" cx="90" cy="32" rx="9" ry="6" fill="#1a202c"/>
-      <circle class="tc-head" cx="85" cy="47" r="1.3" fill="#1a202c"/>
-      <circle class="tc-head" cx="95" cy="47" r="1.3" fill="#1a202c"/>
-      <path class="tc-head" d="M85 54 Q90 57 95 54" stroke="#92400e" stroke-width="1.3" fill="none"/>
-    </svg>`,
-    crane: `<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-      <circle class="tc-bg" cx="90" cy="75" r="62" fill="#dbeafe" opacity="0.7"/>
-      <path d="M135 15 Q155 20 150 35" class="tc-chi" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="3,3" opacity="0.8"/>
-      <path class="tc-bird" d="M155 25 L160 22 M150 30 L155 35" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
-      <path d="M78 165 L80 115 L92 115 L88 165 Z" fill="#1e40af"/>
-      <path d="M108 165 L104 120 L94 120 L98 165 Z" fill="#1e40af" opacity="0.6"/>
-      <path d="M70 65 Q60 105 70 138 L114 138 Q122 105 112 65 Z" class="tc-body" fill="#7c3aed" stroke="#5b21b6" stroke-width="1.5"/>
-      <rect x="68" y="102" width="48" height="6" fill="#fbbf24"/>
-      <path d="M72 68 Q95 45 125 22 L132 30 Q110 55 82 80 Z" class="tc-body" fill="#7c3aed" stroke="#5b21b6" stroke-width="1.5"/>
-      <path d="M108 68 Q90 95 68 118 L60 112 Q82 88 104 82 Z" class="tc-body" fill="#7c3aed" stroke="#5b21b6" stroke-width="1.5"/>
-      <circle cx="128" cy="26" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle cx="62" cy="115" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle class="tc-head" cx="90" cy="48" r="15" fill="#fde68a" stroke="#92400e" stroke-width="1.5"/>
-      <ellipse class="tc-head" cx="90" cy="32" rx="9" ry="6" fill="#1a202c"/>
-      <circle class="tc-head" cx="85" cy="47" r="1.3" fill="#1a202c"/>
-      <circle class="tc-head" cx="95" cy="47" r="1.3" fill="#1a202c"/>
-      <path class="tc-head" d="M85 54 Q90 57 95 54" stroke="#92400e" stroke-width="1.3" fill="none"/>
-    </svg>`,
-    brushknee: `<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-      <circle class="tc-bg" cx="90" cy="75" r="62" fill="#ecfdf5" opacity="0.7"/>
-      <path d="M145 60 Q160 55 158 68" class="tc-chi" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="3,3" opacity="0.8"/>
-      <path d="M55 120 Q65 115 62 128" class="tc-chi" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="3,3" opacity="0.8"/>
-      <path d="M60 165 L75 118 L90 118 L82 165 Z" fill="#1e40af"/>
-      <path d="M118 165 L108 115 L93 115 L102 165 Z" fill="#1e40af"/>
-      <path d="M70 65 Q58 105 70 140 L112 140 Q122 105 112 65 Z" class="tc-body" fill="#dc2626" stroke="#7f1d1d" stroke-width="1.5"/>
-      <rect x="68" y="104" width="48" height="6" fill="#fbbf24"/>
-      <path d="M112 65 Q130 62 148 62 L148 72 Q130 76 108 76 Z" class="tc-body" fill="#dc2626" stroke="#7f1d1d" stroke-width="1.5"/>
-      <path d="M70 72 Q55 90 62 115 L72 112 Q70 95 80 82 Z" class="tc-body" fill="#dc2626" stroke="#7f1d1d" stroke-width="1.5"/>
-      <circle cx="150" cy="66" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle cx="67" cy="113" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle class="tc-head" cx="90" cy="48" r="15" fill="#fde68a" stroke="#92400e" stroke-width="1.5"/>
-      <ellipse class="tc-head" cx="90" cy="32" rx="9" ry="6" fill="#1a202c"/>
-      <circle class="tc-head" cx="85" cy="47" r="1.3" fill="#1a202c"/>
-      <circle class="tc-head" cx="95" cy="47" r="1.3" fill="#1a202c"/>
-      <path class="tc-head" d="M85 54 Q90 57 95 54" stroke="#92400e" stroke-width="1.3" fill="none"/>
-    </svg>`,
-    pipa: `<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-      <circle class="tc-bg" cx="90" cy="75" r="62" fill="#fef3c7" opacity="0.7"/>
-      <path d="M130 35 Q145 30 145 42" class="tc-chi" stroke="#a78bfa" stroke-width="2" fill="none" stroke-dasharray="3,3" opacity="0.8"/>
-      <g class="tc-lute"><ellipse cx="130" cy="55" rx="10" ry="12" fill="#fbbf24" stroke="#b45309" stroke-width="1.5" opacity="0.5"/>
-      <line x1="130" y1="45" x2="130" y2="35" stroke="#b45309" stroke-width="2"/></g>
-      <path d="M78 165 L82 118 L92 118 L88 165 Z" fill="#1e40af"/>
-      <path d="M108 165 L106 122 L96 122 L100 165 Z" fill="#1e40af" opacity="0.7"/>
-      <path d="M70 65 Q58 105 68 140 L112 140 Q122 105 112 65 Z" class="tc-body" fill="#0891b2" stroke="#155e75" stroke-width="1.5"/>
-      <rect x="68" y="104" width="48" height="6" fill="#b45309"/>
-      <path d="M112 68 Q130 60 138 52 L132 45 Q115 52 108 62 Z" class="tc-body" fill="#0891b2" stroke="#155e75" stroke-width="1.5"/>
-      <path d="M108 75 Q120 85 125 78 L118 68 Q110 70 104 72 Z" class="tc-body" fill="#0891b2" stroke="#155e75" stroke-width="1.5"/>
-      <circle cx="134" cy="48" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle cx="122" cy="78" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle class="tc-head" cx="90" cy="48" r="15" fill="#fde68a" stroke="#92400e" stroke-width="1.5"/>
-      <ellipse class="tc-head" cx="90" cy="32" rx="9" ry="6" fill="#1a202c"/>
-      <circle class="tc-head" cx="85" cy="47" r="1.3" fill="#1a202c"/>
-      <circle class="tc-head" cx="95" cy="47" r="1.3" fill="#1a202c"/>
-      <path class="tc-head" d="M85 54 Q90 57 95 54" stroke="#92400e" stroke-width="1.3" fill="none"/>
-    </svg>`,
-    closing: `<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-      <circle class="tc-bg" cx="90" cy="75" r="62" fill="#f3e8ff" opacity="0.7"/>
-      <g transform="translate(90,75)" opacity="0.25">
-        <g class="tc-yinyang">
-          <circle r="40" fill="#fff" stroke="#1a202c" stroke-width="1.5"/>
-          <path d="M0 -40 A40 40 0 0 1 0 40 A20 20 0 0 0 0 0 A20 20 0 0 1 0 -40 Z" fill="#1a202c"/>
-          <circle cx="0" cy="-20" r="4" fill="#1a202c"/>
-          <circle cx="0" cy="20" r="4" fill="#fff"/>
+  // Rigged tai chi figure with SMIL-animated limbs per pose
+  const POSES = {
+    qishi: {
+      dur: 6,
+      armL: [[0, 0], [0.45, 85], [0.55, 85], [1, 0]],
+      armR: [[0, 0], [0.45, -85], [0.55, -85], [1, 0]],
+      foreL: [[0, 0], [0.5, -5], [1, 0]],
+      foreR: [[0, 0], [0.5, 5], [1, 0]],
+      shift: [[0, 0], [0.5, 0], [1, 0]]
+    },
+    horsemane: {
+      dur: 7,
+      armL: [[0, 120], [0.5, -30], [1, 120]],
+      armR: [[0, 30], [0.5, -120], [1, 30]],
+      foreL: [[0, -20], [0.5, 25], [1, -20]],
+      foreR: [[0, -25], [0.5, 20], [1, -25]],
+      shift: [[0, 4], [0.5, -4], [1, 4]]
+    },
+    crane: {
+      dur: 6,
+      armL: [[0, -10], [0.5, 10], [1, -10]],
+      armR: [[0, 170], [0.5, 178], [1, 170]],
+      foreL: [[0, 5], [0.5, 15], [1, 5]],
+      foreR: [[0, -10], [0.5, 0], [1, -10]],
+      shift: [[0, 3], [1, 3]]
+    },
+    brushknee: {
+      dur: 5,
+      armL: [[0, -55], [0.5, -95], [1, -55]],
+      armR: [[0, 75], [0.5, 90], [1, 75]],
+      foreL: [[0, 25], [0.5, 50], [1, 25]],
+      foreR: [[0, -10], [0.5, 5], [1, -10]],
+      shift: [[0, -3], [0.5, 3], [1, -3]]
+    },
+    pipa: {
+      dur: 5,
+      armL: [[0, 55], [0.5, 60], [1, 55]],
+      armR: [[0, -55], [0.5, -60], [1, -55]],
+      foreL: [[0, 35], [0.5, 45], [1, 35]],
+      foreR: [[0, -40], [0.5, -50], [1, -40]],
+      shift: [[0, -2], [0.5, 0], [1, -2]]
+    },
+    closing: {
+      dur: 6,
+      armL: [[0, 10], [0.3, -2], [0.7, -2], [1, 10]],
+      armR: [[0, -10], [0.3, 2], [0.7, 2], [1, -10]],
+      foreL: [[0, 0], [0.5, 0], [1, 0]],
+      foreR: [[0, 0], [0.5, 0], [1, 0]],
+      shift: [[0, 0], [0.5, -1], [1, 0]]
+    }
+  };
+
+  function rotAttr(keyframes, px, py, dur) {
+    const t = keyframes.map(k => k[0]).join(';');
+    const v = keyframes.map(k => `${k[1]} ${px} ${py}`).join(';');
+    const s = Array(keyframes.length - 1).fill('0.42 0 0.58 1').join(';');
+    return `attributeName="transform" type="rotate" values="${v}" keyTimes="${t}" keySplines="${s}" dur="${dur}s" calcMode="spline" repeatCount="indefinite"`;
+  }
+
+  function transAttr(keyframes, dur) {
+    const t = keyframes.map(k => k[0]).join(';');
+    const v = keyframes.map(k => `${k[1]} 0`).join(';');
+    const s = Array(keyframes.length - 1).fill('0.42 0 0.58 1').join(';');
+    return `attributeName="transform" type="translate" values="${v}" keyTimes="${t}" keySplines="${s}" dur="${dur}s" calcMode="spline" repeatCount="indefinite"`;
+  }
+
+  function chi(x, y, clr, delay) {
+    return `<circle cx="${x}" cy="${y}" r="2.5" fill="var(--chi-${clr})">
+      <animate attributeName="cy" values="${y};${y - 90}" dur="4s" begin="${delay}s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.8;0.5;0" keyTimes="0;0.2;0.7;1" dur="4s" begin="${delay}s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="2.5;4;2" keyTimes="0;0.3;1" dur="4s" begin="${delay}s" repeatCount="indefinite"/>
+    </circle>`;
+  }
+
+  function makeFigure(pose) {
+    const p = POSES[pose];
+    return `<svg class="tc-fig ${pose}" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="halo-${pose}" cx="50%" cy="50%" r="50%">
+          <stop offset="30%" stop-color="var(--halo)" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="var(--halo)" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="85" fill="url(#halo-${pose})">
+        <animate attributeName="r" values="82;92;82" dur="5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" repeatCount="indefinite"/>
+      </circle>
+      <ellipse cx="100" cy="185" rx="30" ry="4" fill="#000" opacity="0.15">
+        <animate attributeName="rx" values="30;33;30" dur="5s" repeatCount="indefinite"/>
+      </ellipse>
+      <g>
+        ${chi(35, 150, 'a', 0)}
+        ${chi(165, 145, 'b', 0.7)}
+        ${chi(25, 90, 'a', 1.4)}
+        ${chi(175, 80, 'b', 2.1)}
+        ${chi(50, 40, 'a', 2.8)}
+        ${chi(155, 30, 'b', 3.5)}
+      </g>
+      <g>
+        <animateTransform ${transAttr(p.shift, p.dur)}/>
+        <path d="M92 120 L89 180" stroke="var(--pants)" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <path d="M108 120 L111 180" stroke="var(--pants)" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <g>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="4s" repeatCount="indefinite"/>
+          <path d="M80 66 Q72 96 84 128 L116 128 Q128 96 120 66 Z" fill="var(--robe)" stroke="var(--dark)" stroke-width="1.5"/>
+          <path d="M100 66 Q97 98 100 128" stroke="var(--dark)" stroke-width="1" fill="none" opacity="0.4"/>
+          <rect x="82" y="105" width="36" height="5" fill="var(--belt)" rx="1.5"/>
+        </g>
+        <g>
+          <animateTransform ${rotAttr(p.armL, 85, 68, p.dur)}/>
+          <path d="M85 68 L85 100" stroke="var(--robe)" stroke-width="11" stroke-linecap="round" fill="none"/>
+          <g>
+            <animateTransform ${rotAttr(p.foreL, 85, 100, p.dur)}/>
+            <path d="M85 100 L85 130" stroke="var(--robe)" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <circle cx="85" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
+          </g>
+        </g>
+        <g>
+          <animateTransform ${rotAttr(p.armR, 115, 68, p.dur)}/>
+          <path d="M115 68 L115 100" stroke="var(--robe)" stroke-width="11" stroke-linecap="round" fill="none"/>
+          <g>
+            <animateTransform ${rotAttr(p.foreR, 115, 100, p.dur)}/>
+            <path d="M115 100 L115 130" stroke="var(--robe)" stroke-width="9" stroke-linecap="round" fill="none"/>
+            <circle cx="115" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
+          </g>
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 -0.8;0 0" dur="4s" repeatCount="indefinite"/>
+          <circle cx="100" cy="45" r="16" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1.5"/>
+          <ellipse cx="100" cy="27" rx="10" ry="6" fill="var(--hair)"/>
+          <circle cx="94" cy="44" r="1.4" fill="var(--hair)"/>
+          <circle cx="106" cy="44" r="1.4" fill="var(--hair)"/>
+          <path d="M94 53 Q100 57 106 53" stroke="var(--skin-d)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
         </g>
       </g>
-      <path d="M78 165 L80 115 L90 115 L88 165 Z" fill="#1e40af"/>
-      <path d="M102 165 L100 115 L90 115 L92 165 Z" fill="#1e40af"/>
-      <path d="M70 65 Q58 108 66 138 L114 138 Q122 108 110 65 Z" class="tc-body" fill="#db2777" stroke="#831843" stroke-width="1.5"/>
-      <rect x="66" y="104" width="48" height="6" fill="#fbbf24"/>
-      <path d="M70 65 Q62 90 64 120 L74 120 Q74 92 78 72 Z" class="tc-body" fill="#db2777" stroke="#831843" stroke-width="1.5"/>
-      <path d="M110 65 Q118 90 116 120 L106 120 Q106 92 102 72 Z" class="tc-body" fill="#db2777" stroke="#831843" stroke-width="1.5"/>
-      <circle cx="69" cy="122" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle cx="111" cy="122" r="5" class="tc-lhand" fill="#fde68a" stroke="#92400e" stroke-width="1"/>
-      <circle class="tc-head" cx="90" cy="48" r="15" fill="#fde68a" stroke="#92400e" stroke-width="1.5"/>
-      <ellipse class="tc-head" cx="90" cy="32" rx="9" ry="6" fill="#1a202c"/>
-      <circle class="tc-head" cx="85" cy="47" r="1.3" fill="#1a202c"/>
-      <circle class="tc-head" cx="95" cy="47" r="1.3" fill="#1a202c"/>
-      <path class="tc-head" d="M85 54 Q90 57 95 54" stroke="#92400e" stroke-width="1.3" fill="none"/>
-    </svg>`
+    </svg>`;
+  }
+
+  const illustrations = {
+    qishi: makeFigure('qishi'),
+    horsemane: makeFigure('horsemane'),
+    crane: makeFigure('crane'),
+    brushknee: makeFigure('brushknee'),
+    pipa: makeFigure('pipa'),
+    closing: makeFigure('closing')
   };
 
   const exercises = [
