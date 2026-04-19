@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tai Chi Treningsapp</title>
+<title>Tai Chi + Styrke</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -21,424 +21,338 @@
     padding: 30px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
   }
-  h1 {
-    text-align: center;
-    color: #4a5568;
-    margin-bottom: 8px;
-    font-size: 2em;
-  }
-  .subtitle {
-    text-align: center;
-    color: #718096;
-    margin-bottom: 24px;
-  }
-  .progress {
-    background: #e2e8f0;
+  h1 { text-align: center; color: #4a5568; margin-bottom: 4px; font-size: 1.9em; }
+  .subtitle { text-align: center; color: #718096; margin-bottom: 20px; font-size: 0.95em; }
+  .progress { background: #e2e8f0; border-radius: 20px; height: 10px; overflow: hidden; margin-bottom: 20px; }
+  .progress-bar { background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; width: 0%; transition: width 0.4s ease; }
+  .section-badge {
+    display: inline-block;
+    padding: 4px 14px;
     border-radius: 20px;
-    height: 10px;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-  .progress-bar {
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    height: 100%;
-    width: 0%;
-    transition: width 0.4s ease;
-  }
-  .exercise {
-    text-align: center;
-  }
-  .exercise-number {
-    color: #764ba2;
+    font-size: 0.75em;
     font-weight: 600;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
   }
-  .exercise-name {
-    font-size: 1.8em;
-    color: #2d3748;
-    margin-bottom: 12px;
-  }
-  .exercise-chinese {
-    color: #718096;
-    font-style: italic;
-    margin-bottom: 20px;
+  .section-badge.warmup { background: #dbeafe; color: #1e40af; }
+  .section-badge.strength { background: #fee2e2; color: #991b1b; }
+  .section-badge.flow { background: #d1fae5; color: #065f46; }
+  .section-badge.cooldown { background: #ede9fe; color: #5b21b6; }
+  .exercise { text-align: center; }
+  .exercise-number { color: #764ba2; font-weight: 600; letter-spacing: 2px; margin-bottom: 6px; font-size: 0.85em; }
+  .exercise-name { font-size: 1.7em; color: #2d3748; margin-bottom: 6px; }
+  .exercise-sub { color: #718096; font-style: italic; margin-bottom: 16px; font-size: 0.95em; }
+  .exercise-tip {
+    display: inline-block;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    margin-bottom: 14px;
   }
   .illustration {
     background: linear-gradient(135deg, #f0f4ff, #faf0ff);
     border-radius: 12px;
     padding: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  .illustration svg {
-    width: 240px;
-    height: 240px;
-    filter: drop-shadow(0 6px 14px rgba(80, 40, 120, 0.15));
-  }
+  .illustration svg { width: 230px; height: 230px; filter: drop-shadow(0 6px 14px rgba(80,40,120,0.15)); }
   .tc-fig {
-    --robe: #f97316;
-    --dark: #c2410c;
-    --pants: #1e3a8a;
-    --belt: #b91c1c;
-    --skin: #fde68a;
-    --skin-d: #92400e;
-    --hair: #1a202c;
-    --halo: #fef3c7;
-    --chi-a: #a78bfa;
-    --chi-b: #f472b6;
+    --robe: #f97316; --dark: #c2410c; --pants: #1e3a8a; --belt: #b91c1c;
+    --skin: #fde68a; --skin-d: #92400e; --hair: #1a202c;
+    --halo: #fef3c7; --chi-a: #a78bfa; --chi-b: #f472b6;
   }
-  .tc-fig.horsemane { --robe:#059669; --dark:#065f46; --halo:#fce7f3; --belt:#b45309; }
-  .tc-fig.crane     { --robe:#7c3aed; --dark:#5b21b6; --halo:#dbeafe; --belt:#fbbf24; }
-  .tc-fig.brushknee { --robe:#dc2626; --dark:#7f1d1d; --halo:#ecfdf5; --belt:#fbbf24; }
-  .tc-fig.pipa      { --robe:#0891b2; --dark:#155e75; --halo:#fef3c7; --belt:#b45309; }
-  .tc-fig.closing   { --robe:#db2777; --dark:#831843; --halo:#f3e8ff; --belt:#fbbf24; }
+  .tc-fig.horsemane  { --robe:#059669; --dark:#065f46; --halo:#fce7f3; --belt:#b45309; }
+  .tc-fig.wavehands  { --robe:#3b82f6; --dark:#1d4ed8; --halo:#dbeafe; --belt:#6366f1; }
+  .tc-fig.pushups    { --robe:#ef4444; --dark:#b91c1c; --halo:#fef2f2; --belt:#1e3a8a; --chi-a:#f87171; --chi-b:#fbbf24; }
+  .tc-fig.plank      { --robe:#6b7280; --dark:#374151; --halo:#f3f4f6; --belt:#1e3a8a; --chi-a:#9ca3af; --chi-b:#6b7280; }
+  .tc-fig.rowing     { --robe:#6366f1; --dark:#4338ca; --halo:#e0e7ff; --belt:#1e3a8a; --chi-a:#818cf8; --chi-b:#a78bfa; }
+  .tc-fig.singlewhip { --robe:#16a34a; --dark:#15803d; --halo:#dcfce7; --belt:#b45309; }
+  .tc-fig.brushknee  { --robe:#dc2626; --dark:#7f1d1d; --halo:#ecfdf5; --belt:#fbbf24; }
+  .tc-fig.graspbird  { --robe:#8b5cf6; --dark:#6d28d9; --halo:#ede9fe; --belt:#fbbf24; }
+  .tc-fig.repulse    { --robe:#d97706; --dark:#92400e; --halo:#fef3c7; --belt:#dc2626; }
+  .tc-fig.closing    { --robe:#db2777; --dark:#831843; --halo:#f3e8ff; --belt:#fbbf24; }
   .exercise-description {
-    background: #f7fafc;
-    padding: 18px;
-    border-radius: 12px;
-    line-height: 1.6;
-    margin-bottom: 24px;
-    color: #4a5568;
-    text-align: left;
+    background: #f7fafc; padding: 14px 16px; border-radius: 12px;
+    line-height: 1.6; margin-bottom: 18px; color: #4a5568; text-align: left; font-size: 0.95em;
   }
-  .timer {
-    font-size: 3.5em;
-    font-weight: 300;
-    color: #4a5568;
-    margin: 16px 0;
-  }
-  .buttons {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+  .timer { font-size: 3.2em; font-weight: 300; color: #4a5568; margin: 12px 0; }
+  .buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
   button {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 30px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    font-weight: 500;
+    background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none;
+    padding: 13px 26px; border-radius: 30px; font-size: 1em; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s; font-weight: 500;
   }
-  button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
-  }
-  button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  button.secondary {
-    background: #e2e8f0;
-    color: #4a5568;
-  }
-  .complete {
-    text-align: center;
-    padding: 20px;
-  }
-  .complete h2 {
-    color: #48bb78;
-    margin-bottom: 12px;
-  }
+  button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(118,75,162,0.4); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.secondary { background: #e2e8f0; color: #4a5568; }
+  .complete { text-align: center; padding: 20px; }
+  .complete h2 { color: #48bb78; margin-bottom: 12px; }
 </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Tai Chi</h1>
-    <p class="subtitle">En rolig øktøkt med 6 øvelser</p>
-    <div class="progress">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-    <div id="content"></div>
-  </div>
-
+<div class="container">
+  <h1>Tai Chi + Styrke</h1>
+  <p class="subtitle">Hybridprogram &mdash; flyt, kjerne og armer (ca. 25 min)</p>
+  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  <div id="content"></div>
+</div>
 <script>
-  // Rigged tai chi figure with SMIL-animated limbs per pose
-  const POSES = {
-    qishi: {
-      dur: 6,
-      armL: [[0, 0], [0.45, 85], [0.55, 85], [1, 0]],
-      armR: [[0, 0], [0.45, -85], [0.55, -85], [1, 0]],
-      foreL: [[0, 0], [0.5, -5], [1, 0]],
-      foreR: [[0, 0], [0.5, 5], [1, 0]],
-      shift: [[0, 0], [0.5, 0], [1, 0]]
-    },
-    horsemane: {
-      dur: 7,
-      armL: [[0, 120], [0.5, -30], [1, 120]],
-      armR: [[0, 30], [0.5, -120], [1, 30]],
-      foreL: [[0, -20], [0.5, 25], [1, -20]],
-      foreR: [[0, -25], [0.5, 20], [1, -25]],
-      shift: [[0, 4], [0.5, -4], [1, 4]]
-    },
-    crane: {
-      dur: 6,
-      armL: [[0, -10], [0.5, 10], [1, -10]],
-      armR: [[0, 170], [0.5, 178], [1, 170]],
-      foreL: [[0, 5], [0.5, 15], [1, 5]],
-      foreR: [[0, -10], [0.5, 0], [1, -10]],
-      shift: [[0, 3], [1, 3]]
-    },
-    brushknee: {
-      dur: 5,
-      armL: [[0, -55], [0.5, -95], [1, -55]],
-      armR: [[0, 75], [0.5, 90], [1, 75]],
-      foreL: [[0, 25], [0.5, 50], [1, 25]],
-      foreR: [[0, -10], [0.5, 5], [1, -10]],
-      shift: [[0, -3], [0.5, 3], [1, -3]]
-    },
-    pipa: {
-      dur: 5,
-      armL: [[0, 55], [0.5, 60], [1, 55]],
-      armR: [[0, -55], [0.5, -60], [1, -55]],
-      foreL: [[0, 35], [0.5, 45], [1, 35]],
-      foreR: [[0, -40], [0.5, -50], [1, -40]],
-      shift: [[0, -2], [0.5, 0], [1, -2]]
-    },
-    closing: {
-      dur: 6,
-      armL: [[0, 10], [0.3, -2], [0.7, -2], [1, 10]],
-      armR: [[0, -10], [0.3, 2], [0.7, 2], [1, -10]],
-      foreL: [[0, 0], [0.5, 0], [1, 0]],
-      foreR: [[0, 0], [0.5, 0], [1, 0]],
-      shift: [[0, 0], [0.5, -1], [1, 0]]
-    }
-  };
-
-  function rotAttr(keyframes, px, py, dur) {
-    const t = keyframes.map(k => k[0]).join(';');
-    const v = keyframes.map(k => `${k[1]} ${px} ${py}`).join(';');
-    const s = Array(keyframes.length - 1).fill('0.42 0 0.58 1').join(';');
-    return `attributeName="transform" type="rotate" values="${v}" keyTimes="${t}" keySplines="${s}" dur="${dur}s" calcMode="spline" repeatCount="indefinite"`;
+const POSES = {
+  qishi: {
+    dur:6,
+    armL:[[0,0],[.45,85],[.55,85],[1,0]],
+    armR:[[0,0],[.45,-85],[.55,-85],[1,0]],
+    foreL:[[0,0],[.5,-5],[1,0]], foreR:[[0,0],[.5,5],[1,0]],
+    shift:[[0,0],[1,0]]
+  },
+  horsemane: {
+    dur:7,
+    armL:[[0,120],[.5,-30],[1,120]],
+    armR:[[0,30],[.5,-120],[1,30]],
+    foreL:[[0,-20],[.5,25],[1,-20]], foreR:[[0,-25],[.5,20],[1,-25]],
+    shift:[[0,4],[.5,-4],[1,4]]
+  },
+  wavehands: {
+    dur:6,
+    armL:[[0,50],[.5,-50],[1,50]],
+    armR:[[0,-50],[.5,50],[1,-50]],
+    foreL:[[0,30],[.5,-30],[1,30]], foreR:[[0,-30],[.5,30],[1,-30]],
+    shift:[[0,6],[.5,-6],[1,6]]
+  },
+  pushups: {
+    dur:3,
+    armL:[[0,85],[.4,40],[.6,40],[1,85]],
+    armR:[[0,-85],[.4,-40],[.6,-40],[1,-85]],
+    foreL:[[0,0],[.4,-40],[.6,-40],[1,0]], foreR:[[0,0],[.4,40],[.6,40],[1,0]],
+    shift:[[0,0],[.4,-3],[.6,-3],[1,0]]
+  },
+  plank: {
+    dur:4,
+    armL:[[0,82],[.5,85],[1,82]],
+    armR:[[0,-82],[.5,-85],[1,-82]],
+    foreL:[[0,0],[1,0]], foreR:[[0,0],[1,0]],
+    shift:[[0,0],[.5,-1],[1,0]]
+  },
+  rowing: {
+    dur:4,
+    armL:[[0,50],[.45,-25],[.55,-25],[1,50]],
+    armR:[[0,-50],[.45,25],[.55,25],[1,-50]],
+    foreL:[[0,20],[.45,-50],[.55,-50],[1,20]], foreR:[[0,-20],[.45,50],[.55,50],[1,-20]],
+    shift:[[0,2],[.5,-2],[1,2]]
+  },
+  singlewhip: {
+    dur:6,
+    armL:[[0,88],[.5,92],[1,88]],
+    armR:[[0,-100],[.5,-95],[1,-100]],
+    foreL:[[0,0],[.5,5],[1,0]], foreR:[[0,-40],[.5,-35],[1,-40]],
+    shift:[[0,-2],[.5,2],[1,-2]]
+  },
+  brushknee: {
+    dur:5,
+    armL:[[0,-55],[.5,-95],[1,-55]],
+    armR:[[0,75],[.5,90],[1,75]],
+    foreL:[[0,25],[.5,50],[1,25]], foreR:[[0,-10],[.5,5],[1,-10]],
+    shift:[[0,-3],[.5,3],[1,-3]]
+  },
+  graspbird: {
+    dur:8,
+    armL:[[0,60],[.25,20],[.5,50],[.75,80],[1,60]],
+    armR:[[0,-60],[.25,-90],[.5,-50],[.75,-80],[1,-60]],
+    foreL:[[0,20],[.25,-10],[.5,30],[.75,0],[1,20]],
+    foreR:[[0,-20],[.25,-30],[.5,-10],[.75,-5],[1,-20]],
+    shift:[[0,0],[.25,3],[.5,-2],[.75,2],[1,0]]
+  },
+  repulse: {
+    dur:6,
+    armL:[[0,100],[.5,-30],[1,100]],
+    armR:[[0,-30],[.5,100],[1,-30]],
+    foreL:[[0,-20],[.5,20],[1,-20]], foreR:[[0,20],[.5,-20],[1,20]],
+    shift:[[0,-3],[.5,3],[1,-3]]
+  },
+  closing: {
+    dur:6,
+    armL:[[0,10],[.3,-2],[.7,-2],[1,10]],
+    armR:[[0,-10],[.3,2],[.7,2],[1,-10]],
+    foreL:[[0,0],[.5,0],[1,0]], foreR:[[0,0],[.5,0],[1,0]],
+    shift:[[0,0],[.5,-1],[1,0]]
   }
+};
 
-  function transAttr(keyframes, dur) {
-    const t = keyframes.map(k => k[0]).join(';');
-    const v = keyframes.map(k => `${k[1]} 0`).join(';');
-    const s = Array(keyframes.length - 1).fill('0.42 0 0.58 1').join(';');
-    return `attributeName="transform" type="translate" values="${v}" keyTimes="${t}" keySplines="${s}" dur="${dur}s" calcMode="spline" repeatCount="indefinite"`;
-  }
-
-  function chi(x, y, clr, delay) {
-    return `<circle cx="${x}" cy="${y}" r="2.5" fill="var(--chi-${clr})">
-      <animate attributeName="cy" values="${y};${y - 90}" dur="4s" begin="${delay}s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;0.8;0.5;0" keyTimes="0;0.2;0.7;1" dur="4s" begin="${delay}s" repeatCount="indefinite"/>
-      <animate attributeName="r" values="2.5;4;2" keyTimes="0;0.3;1" dur="4s" begin="${delay}s" repeatCount="indefinite"/>
-    </circle>`;
-  }
-
-  function makeFigure(pose) {
-    const p = POSES[pose];
-    return `<svg class="tc-fig ${pose}" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="halo-${pose}" cx="50%" cy="50%" r="50%">
-          <stop offset="30%" stop-color="var(--halo)" stop-opacity="0.95"/>
-          <stop offset="100%" stop-color="var(--halo)" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
-      <circle cx="100" cy="100" r="85" fill="url(#halo-${pose})">
-        <animate attributeName="r" values="82;92;82" dur="5s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" repeatCount="indefinite"/>
-      </circle>
-      <ellipse cx="100" cy="185" rx="30" ry="4" fill="#000" opacity="0.15">
-        <animate attributeName="rx" values="30;33;30" dur="5s" repeatCount="indefinite"/>
-      </ellipse>
+function rotA(kf,px,py,dur){
+  const t=kf.map(k=>k[0]).join(';'),v=kf.map(k=>`${k[1]} ${px} ${py}`).join(';'),
+  s=Array(kf.length-1).fill('0.42 0 0.58 1').join(';');
+  return `attributeName="transform" type="rotate" values="${v}" keyTimes="${t}" keySplines="${s}" dur="${dur}s" calcMode="spline" repeatCount="indefinite"`;
+}
+function trA(kf,dur){
+  const t=kf.map(k=>k[0]).join(';'),v=kf.map(k=>`${k[1]} 0`).join(';'),
+  s=Array(kf.length-1).fill('0.42 0 0.58 1').join(';');
+  return `attributeName="transform" type="translate" values="${v}" keyTimes="${t}" keySplines="${s}" dur="${dur}s" calcMode="spline" repeatCount="indefinite"`;
+}
+function chi(x,y,c,d){
+  const f=c==='a'?'var(--chi-a)':'var(--chi-b)';
+  return `<circle cx="${x}" cy="${y}" r="2.5" fill="${f}">
+    <animate attributeName="cy" values="${y};${y-90}" dur="4s" begin="${d}s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.8;0.5;0" keyTimes="0;0.2;0.7;1" dur="4s" begin="${d}s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="2.5;4;2" keyTimes="0;0.3;1" dur="4s" begin="${d}s" repeatCount="indefinite"/>
+  </circle>`;
+}
+function fig(pose){
+  const p=POSES[pose];
+  return `<svg class="tc-fig ${pose}" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="h-${pose}" cx="50%" cy="50%" r="50%">
+      <stop offset="30%" stop-color="var(--halo)" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="var(--halo)" stop-opacity="0"/>
+    </radialGradient></defs>
+    <circle cx="100" cy="100" r="85" fill="url(#h-${pose})">
+      <animate attributeName="r" values="82;92;82" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    <ellipse cx="100" cy="185" rx="30" ry="4" fill="#000" opacity="0.15">
+      <animate attributeName="rx" values="30;33;30" dur="5s" repeatCount="indefinite"/>
+    </ellipse>
+    <g>${chi(35,150,'a',0)}${chi(165,145,'b',.7)}${chi(25,90,'a',1.4)}${chi(175,80,'b',2.1)}${chi(50,40,'a',2.8)}${chi(155,30,'b',3.5)}</g>
+    <g>
+      <animateTransform ${trA(p.shift,p.dur)}/>
+      <path d="M92 120 L89 180" stroke="var(--pants)" stroke-width="11" stroke-linecap="round" fill="none"/>
+      <path d="M108 120 L111 180" stroke="var(--pants)" stroke-width="11" stroke-linecap="round" fill="none"/>
       <g>
-        ${chi(35, 150, 'a', 0)}
-        ${chi(165, 145, 'b', 0.7)}
-        ${chi(25, 90, 'a', 1.4)}
-        ${chi(175, 80, 'b', 2.1)}
-        ${chi(50, 40, 'a', 2.8)}
-        ${chi(155, 30, 'b', 3.5)}
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="4s" repeatCount="indefinite"/>
+        <path d="M80 66 Q72 96 84 128 L116 128 Q128 96 120 66 Z" fill="var(--robe)" stroke="var(--dark)" stroke-width="1.5"/>
+        <path d="M100 66 Q97 98 100 128" stroke="var(--dark)" stroke-width="1" fill="none" opacity="0.4"/>
+        <rect x="82" y="105" width="36" height="5" fill="var(--belt)" rx="1.5"/>
       </g>
-      <g>
-        <animateTransform ${transAttr(p.shift, p.dur)}/>
-        <path d="M92 120 L89 180" stroke="var(--pants)" stroke-width="11" stroke-linecap="round" fill="none"/>
-        <path d="M108 120 L111 180" stroke="var(--pants)" stroke-width="11" stroke-linecap="round" fill="none"/>
-        <g>
-          <animateTransform attributeName="transform" type="translate" values="0 0;0 -1.2;0 0" dur="4s" repeatCount="indefinite"/>
-          <path d="M80 66 Q72 96 84 128 L116 128 Q128 96 120 66 Z" fill="var(--robe)" stroke="var(--dark)" stroke-width="1.5"/>
-          <path d="M100 66 Q97 98 100 128" stroke="var(--dark)" stroke-width="1" fill="none" opacity="0.4"/>
-          <rect x="82" y="105" width="36" height="5" fill="var(--belt)" rx="1.5"/>
-        </g>
-        <g>
-          <animateTransform ${rotAttr(p.armL, 85, 68, p.dur)}/>
-          <path d="M85 68 L85 100" stroke="var(--robe)" stroke-width="11" stroke-linecap="round" fill="none"/>
-          <g>
-            <animateTransform ${rotAttr(p.foreL, 85, 100, p.dur)}/>
-            <path d="M85 100 L85 130" stroke="var(--robe)" stroke-width="9" stroke-linecap="round" fill="none"/>
-            <circle cx="85" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
-          </g>
-        </g>
-        <g>
-          <animateTransform ${rotAttr(p.armR, 115, 68, p.dur)}/>
-          <path d="M115 68 L115 100" stroke="var(--robe)" stroke-width="11" stroke-linecap="round" fill="none"/>
-          <g>
-            <animateTransform ${rotAttr(p.foreR, 115, 100, p.dur)}/>
-            <path d="M115 100 L115 130" stroke="var(--robe)" stroke-width="9" stroke-linecap="round" fill="none"/>
-            <circle cx="115" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
-          </g>
-        </g>
-        <g>
-          <animateTransform attributeName="transform" type="translate" values="0 0;0 -0.8;0 0" dur="4s" repeatCount="indefinite"/>
-          <circle cx="100" cy="45" r="16" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1.5"/>
-          <ellipse cx="100" cy="27" rx="10" ry="6" fill="var(--hair)"/>
-          <circle cx="94" cy="44" r="1.4" fill="var(--hair)"/>
-          <circle cx="106" cy="44" r="1.4" fill="var(--hair)"/>
-          <path d="M94 53 Q100 57 106 53" stroke="var(--skin-d)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      <g><animateTransform ${rotA(p.armL,85,68,p.dur)}/>
+        <path d="M85 68 L85 100" stroke="var(--robe)" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <g><animateTransform ${rotA(p.foreL,85,100,p.dur)}/>
+          <path d="M85 100 L85 130" stroke="var(--robe)" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <circle cx="85" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
         </g>
       </g>
-    </svg>`;
+      <g><animateTransform ${rotA(p.armR,115,68,p.dur)}/>
+        <path d="M115 68 L115 100" stroke="var(--robe)" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <g><animateTransform ${rotA(p.foreR,115,100,p.dur)}/>
+          <path d="M115 100 L115 130" stroke="var(--robe)" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <circle cx="115" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
+        </g>
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -0.8;0 0" dur="4s" repeatCount="indefinite"/>
+        <circle cx="100" cy="45" r="16" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1.5"/>
+        <ellipse cx="100" cy="27" rx="10" ry="6" fill="var(--hair)"/>
+        <circle cx="94" cy="44" r="1.4" fill="var(--hair)"/>
+        <circle cx="106" cy="44" r="1.4" fill="var(--hair)"/>
+        <path d="M94 53 Q100 57 106 53" stroke="var(--skin-d)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      </g>
+    </g>
+  </svg>`;
+}
+
+const ill={};
+Object.keys(POSES).forEach(k=>ill[k]=fig(k));
+
+const exercises = [
+  // --- 1. Tai Chi Oppvarming (5 min) ---
+  { section:'warmup', sectionName:'Tai Chi Oppvarming', sectionTime:'5 min',
+    name:'Åpne Tai Chi', sub:'起势 · Qǐ shì',
+    desc:'Stå med føttene i skulderbredde. Pust rolig inn mens du hever armene sakte opp til skulderhøyde, håndflatene ned. Pust ut og senk armene.',
+    tip:'Aktiver kjerne, ledd og pust', duration:60, svg:ill.qishi },
+  { name:'Del den ville hestens manke', sub:'野马分鬃 · Yě mǎ fēn zōng',
+    desc:'Flytt vekten til høyre ben, løft venstre ben og plasser det foran. Beveg armene som om du skiller en manke – en hånd opp, en ned. Gjenta på begge sider.',
+    duration:120, svg:ill.horsemane },
+  { name:'Skyv skyene', sub:'云手 · Yún shǒu',
+    desc:'Stå med føttene parallelt. Før armene foran kroppen i store, myke sirkler – som om du skyver skyer til siden. La overkroppen følge med rolig.',
+    duration:120, svg:ill.wavehands },
+
+  // --- 2. Styrkeblokk (10–12 min) ---
+  { section:'strength', sectionName:'Styrkeblokk', sectionTime:'10–12 min · 2–3 runder',
+    name:'Push-ups', sub:'Armhevinger',
+    desc:'Hold kroppen strak fra hode til hæl. Senk brystet mot gulvet, press deg opp. 8–15 repetisjoner.',
+    tip:'Lettere: på knær · Tyngre: 3 sek ned', duration:60, svg:ill.pushups },
+  { name:'Planke', sub:'Kjernehold',
+    desc:'Hold kroppen strak i push-up-posisjon med strake armer. Stram mage og sete. Ikke la korsryggen falle.',
+    tip:'Hold 30–45 sekunder', duration:45, svg:ill.plank },
+  { name:'Roing', sub:'Albue-trekk',
+    desc:'Stå med lett bøyde knær. Trekk albuene bakover som om du ror – stram mellom skulderbladene. 10–15 repetisjoner.',
+    tip:'Bra for armer og rygg', duration:60, svg:ill.rowing },
+  { name:'Enkeltpisk-hold', sub:'单鞭 · Dān biān',
+    desc:'Strekk en arm ut til siden med "krok-hånd", den andre skyver fremover. Hold stillingen isometrisk 20–30 sekunder per side.',
+    tip:'Isometrisk styrke i armer og skuldre', duration:60, svg:ill.singlewhip },
+
+  // --- 3. Tai Chi Styrkeflyt (5–6 min) ---
+  { section:'flow', sectionName:'Tai Chi Styrkeflyt', sectionTime:'5–6 min · 10–20% ekstra spenning',
+    name:'Børst knær og skyv', sub:'搂膝拗步 · Lǒu xī ǎo bù',
+    desc:'Tråkk frem med ett ben. Før den ene hånden forbi kneet, mens den andre skyves fremover i brysthøyde. Utfør sakte med bevisst muskelspenning.',
+    tip:'Hold 10–20% muskelspenning hele tiden', duration:120, svg:ill.brushknee },
+  { name:'Grip fuglens hale', sub:'揽雀尾 · Lǎn què wěi',
+    desc:'Fire bevegelser i ett: avverge, rulle tilbake, presse, skyve. Flyt gjennom sekvensen med ekstra kraft i hver posisjon.',
+    duration:120, svg:ill.graspbird },
+  { name:'Jag apen tilbake', sub:'倒卷肱 · Dào juǎn gōng',
+    desc:'Gå bakover med kontrollerte skritt. En arm skyver fremover mens den andre trekkes tilbake. Bytt side for hvert skritt.',
+    duration:120, svg:ill.repulse },
+
+  // --- 4. Nedtrapping (3–4 min) ---
+  { section:'cooldown', sectionName:'Nedtrapping', sectionTime:'3–4 min',
+    name:'Åpne Tai Chi', sub:'起势 · Qǐ shì',
+    desc:'Gjenta åpningsbevegelsen. Senk tempoet enda mer. Kjenn hvordan kroppen føles etter økten.',
+    duration:60, svg:ill.qishi },
+  { name:'Avslutning og pust', sub:'收势 · Shōu shì',
+    desc:'Samle vekten jevnt på begge ben. Senk armene rolig ned langs sidene. Stå stille, lukk øynene, kjenn pusten og roen i 60 sekunder.',
+    tip:'La pusten bli dypere for hvert utpust', duration:120, svg:ill.closing }
+];
+
+let cur=0, timeLeft=0, timerId=null, running=false;
+const content=document.getElementById('content');
+const bar=document.getElementById('progressBar');
+
+function render(){
+  if(cur>=exercises.length){
+    content.innerHTML=`<div class="complete">
+      <h2>Godt gjort!</h2>
+      <p style="margin-bottom:20px;color:#4a5568;">Du har fullført hele hybridøkten – tai chi og styrke!</p>
+      <button onclick="restart()">Start på nytt</button>
+    </div>`;
+    bar.style.width='100%';
+    return;
   }
-
-  const illustrations = {
-    qishi: makeFigure('qishi'),
-    horsemane: makeFigure('horsemane'),
-    crane: makeFigure('crane'),
-    brushknee: makeFigure('brushknee'),
-    pipa: makeFigure('pipa'),
-    closing: makeFigure('closing')
-  };
-
-  const exercises = [
-    {
-      name: "Åpne Tai Chi",
-      chinese: "起势 - Qǐ shì",
-      description: "Stå med føttene i skulderbredde. Pust rolig inn mens du hever armene sakte opp til skulderhøyde, håndflatene ned. Pust ut og senk armene.",
-      duration: 60,
-      svg: illustrations.qishi
-    },
-    {
-      name: "Del den ville hestens manke",
-      chinese: "野马分鬃 - Yě mǎ fēn zōng",
-      description: "Flytt vekten til høyre ben, løft venstre ben og plasser det foran. Beveg armene som om du skiller en manke – en hånd opp, en ned. Gjenta på begge sider.",
-      duration: 90,
-      svg: illustrations.horsemane
-    },
-    {
-      name: "Tranen brer sine vinger",
-      chinese: "白鹤亮翅 - Bái hè liàng chì",
-      description: "Stå med vekten på bakre ben. Løft høyre hånd opp over hodet mens venstre hånd senkes ned ved hoften. Hold blikket rolig fremover.",
-      duration: 75,
-      svg: illustrations.crane
-    },
-    {
-      name: "Børst knær",
-      chinese: "搂膝拗步 - Lǒu xī ǎo bù",
-      description: "Tråkk frem med ett ben. Før den ene hånden forbi kneet i en bueformet bevegelse, mens den andre hånden skyves fremover i brysthøyde.",
-      duration: 90,
-      svg: illustrations.brushknee
-    },
-    {
-      name: "Spill pipa",
-      chinese: "手挥琵琶 - Shǒu huī pípá",
-      description: "Stå med vekten bak, fremre hæl lett hvilende. Løft armene som om du holder en pipa-lutt – høyre hånd foran, venstre i albuehøyde. Hold posisjonen og pust.",
-      duration: 60,
-      svg: illustrations.pipa
-    },
-    {
-      name: "Avslutning",
-      chinese: "收势 - Shōu shì",
-      description: "Samle vekten jevnt på begge ben. Senk armene rolig ned langs sidene. Stå stille et øyeblikk, kjenn pusten og roen.",
-      duration: 60,
-      svg: illustrations.closing
-    }
-  ];
-
-  let currentIndex = 0;
-  let timeLeft = 0;
-  let timerId = null;
-  let isRunning = false;
-
-  const content = document.getElementById('content');
-  const progressBar = document.getElementById('progressBar');
-
-  function render() {
-    if (currentIndex >= exercises.length) {
-      content.innerHTML = `
-        <div class="complete">
-          <h2>Godt gjort!</h2>
-          <p style="margin-bottom: 20px; color: #4a5568;">Du har fullført alle 6 tai chi-øvelsene.</p>
-          <button onclick="restart()">Start på nytt</button>
-        </div>
-      `;
-      progressBar.style.width = '100%';
-      return;
-    }
-
-    const ex = exercises[currentIndex];
-    if (timeLeft === 0) timeLeft = ex.duration;
-
-    content.innerHTML = `
-      <div class="exercise">
-        <div class="exercise-number">ØVELSE ${currentIndex + 1} AV ${exercises.length}</div>
-        <div class="exercise-name">${ex.name}</div>
-        <div class="exercise-chinese">${ex.chinese}</div>
-        <div class="illustration">${ex.svg}</div>
-        <div class="exercise-description">${ex.description}</div>
-        <div class="timer" id="timer">${formatTime(timeLeft)}</div>
-        <div class="buttons">
-          <button id="toggleBtn" onclick="toggle()">${isRunning ? 'Pause' : 'Start'}</button>
-          <button class="secondary" onclick="next()">${currentIndex === exercises.length - 1 ? 'Fullfør' : 'Neste'}</button>
-        </div>
-      </div>
-    `;
-
-    const progress = (currentIndex / exercises.length) * 100;
-    progressBar.style.width = progress + '%';
-  }
-
-  function formatTime(s) {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m}:${sec.toString().padStart(2, '0')}`;
-  }
-
-  function toggle() {
-    if (isRunning) {
-      clearInterval(timerId);
-      isRunning = false;
-      document.getElementById('toggleBtn').textContent = 'Start';
-    } else {
-      isRunning = true;
-      document.getElementById('toggleBtn').textContent = 'Pause';
-      timerId = setInterval(() => {
-        timeLeft--;
-        const timerEl = document.getElementById('timer');
-        if (timerEl) timerEl.textContent = formatTime(timeLeft);
-        if (timeLeft <= 0) {
-          clearInterval(timerId);
-          isRunning = false;
-          next();
-        }
-      }, 1000);
-    }
-  }
-
-  function next() {
-    clearInterval(timerId);
-    isRunning = false;
-    currentIndex++;
-    timeLeft = 0;
-    render();
-  }
-
-  function restart() {
-    currentIndex = 0;
-    timeLeft = 0;
-    isRunning = false;
-    clearInterval(timerId);
-    render();
-  }
-
-  render();
+  const ex=exercises[cur];
+  if(timeLeft===0) timeLeft=ex.duration;
+  const secHtml=ex.section?`<div class="section-badge ${ex.section}">${ex.sectionName} · ${ex.sectionTime}</div>`:'';
+  const tipHtml=ex.tip?`<div class="exercise-tip">${ex.tip}</div>`:'';
+  content.innerHTML=`<div class="exercise">
+    ${secHtml}
+    <div class="exercise-number">ØVELSE ${cur+1} AV ${exercises.length}</div>
+    <div class="exercise-name">${ex.name}</div>
+    <div class="exercise-sub">${ex.sub}</div>
+    ${tipHtml}
+    <div class="illustration">${ex.svg}</div>
+    <div class="exercise-description">${ex.desc}</div>
+    <div class="timer" id="timer">${fmt(timeLeft)}</div>
+    <div class="buttons">
+      <button id="toggleBtn" onclick="toggle()">${running?'Pause':'Start'}</button>
+      <button class="secondary" onclick="next()">${cur===exercises.length-1?'Fullfør':'Neste'}</button>
+    </div>
+  </div>`;
+  bar.style.width=(cur/exercises.length*100)+'%';
+}
+function fmt(s){return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');}
+function toggle(){
+  if(running){clearInterval(timerId);running=false;document.getElementById('toggleBtn').textContent='Start';}
+  else{running=true;document.getElementById('toggleBtn').textContent='Pause';
+    timerId=setInterval(()=>{timeLeft--;const el=document.getElementById('timer');
+      if(el)el.textContent=fmt(timeLeft);
+      if(timeLeft<=0){clearInterval(timerId);running=false;next();}
+    },1000);}
+}
+function next(){clearInterval(timerId);running=false;cur++;timeLeft=0;render();}
+function restart(){cur=0;timeLeft=0;running=false;clearInterval(timerId);render();}
+render();
 </script>
 </body>
 </html>
