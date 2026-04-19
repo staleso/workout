@@ -8,158 +8,133 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #0a0a0a;
     min-height: 100vh;
-    color: #333;
-    padding: 20px;
+    color: #e5e5e5;
+    padding: 16px;
   }
   .container {
     max-width: 600px;
     margin: 0 auto;
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    background: #161616;
+    border-radius: 4px;
+    padding: 28px;
+    border: 1px solid #2a2a2a;
   }
-  h1 { text-align: center; color: #4a5568; margin-bottom: 4px; font-size: 1.9em; }
-  .subtitle { text-align: center; color: #718096; margin-bottom: 20px; font-size: 0.95em; }
-  .progress { background: #e2e8f0; border-radius: 20px; height: 10px; overflow: hidden; margin-bottom: 20px; }
-  .progress-bar { background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; width: 0%; transition: width 0.4s ease; }
+  h1 {
+    text-align: center; color: #f5f5f5; margin-bottom: 4px;
+    font-size: 1.8em; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .subtitle { text-align: center; color: #737373; margin-bottom: 20px; font-size: 0.85em; letter-spacing: 1px; text-transform: uppercase; }
+  .progress { background: #262626; border-radius: 2px; height: 6px; overflow: hidden; margin-bottom: 22px; }
+  .progress-bar { background: linear-gradient(90deg, #b91c1c, #f59e0b); height: 100%; width: 0%; transition: width 0.4s ease; }
   .section-badge {
-    display: inline-block;
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 0.75em;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
+    display: inline-block; padding: 4px 12px; border-radius: 2px;
+    font-size: 0.7em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
   }
-  .section-badge.warmup { background: #dbeafe; color: #1e40af; }
-  .section-badge.strength { background: #fee2e2; color: #991b1b; }
-  .section-badge.flow { background: #d1fae5; color: #065f46; }
-  .section-badge.cooldown { background: #ede9fe; color: #5b21b6; }
+  .section-badge.warmup { background: #1e3a5f; color: #93c5fd; }
+  .section-badge.strength { background: #7f1d1d; color: #fca5a5; }
+  .section-badge.flow { background: #14532d; color: #86efac; }
+  .section-badge.cooldown { background: #374151; color: #d1d5db; }
   .exercise { text-align: center; }
-  .exercise-number { color: #764ba2; font-weight: 600; letter-spacing: 2px; margin-bottom: 6px; font-size: 0.85em; }
-  .exercise-name { font-size: 1.7em; color: #2d3748; margin-bottom: 6px; }
-  .exercise-sub { color: #718096; font-style: italic; margin-bottom: 16px; font-size: 0.95em; }
+  .exercise-number { color: #737373; font-weight: 700; letter-spacing: 3px; margin-bottom: 6px; font-size: 0.75em; }
+  .exercise-name { font-size: 1.6em; color: #f5f5f5; margin-bottom: 4px; font-weight: 700; }
+  .exercise-sub { color: #a3a3a3; font-style: normal; margin-bottom: 14px; font-size: 0.85em; letter-spacing: 0.5px; }
   .exercise-tip {
-    display: inline-block;
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    color: #92400e;
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 0.85em;
-    margin-bottom: 14px;
+    display: inline-block; background: #262626; border: 1px solid #404040;
+    color: #f59e0b; padding: 5px 14px; border-radius: 2px; font-size: 0.8em; margin-bottom: 12px; font-weight: 600;
   }
   .illustration {
-    background: linear-gradient(135deg, #f0f4ff, #faf0ff);
-    border-radius: 12px;
-    padding: 14px 10px;
-    margin-bottom: 16px;
+    background: #0f0f0f; border-radius: 4px; padding: 14px 10px; margin-bottom: 14px; border: 1px solid #1f1f1f;
   }
-  .pose-pair {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
+  .pose-pair { display: flex; align-items: center; justify-content: center; gap: 6px; }
   .pose-frame { text-align: center; flex: 1; max-width: 160px; }
   .pose-label {
-    font-size: 0.75em;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #64748b;
-    margin-bottom: 4px;
+    font-size: 0.7em; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: #525252; margin-bottom: 4px;
   }
-  .pose-arrow {
-    font-size: 1.8em;
-    color: #a78bfa;
-    font-weight: 300;
-    padding: 0 2px;
-    flex-shrink: 0;
-  }
-  .pose-frame svg { width: 100%; height: auto; max-width: 150px; filter: drop-shadow(0 4px 10px rgba(80,40,120,0.12)); }
+  .pose-arrow { font-size: 1.6em; color: #b91c1c; font-weight: 700; padding: 0 2px; flex-shrink: 0; }
+  .pose-frame svg { width: 100%; height: auto; max-width: 150px; }
   .tc-fig {
-    --robe: #f97316; --dark: #c2410c; --pants: #1e3a8a; --belt: #b91c1c;
-    --skin: #fde68a; --skin-d: #92400e; --hair: #1a202c;
-    --halo: #fef3c7; --chi-a: #a78bfa; --chi-b: #f472b6;
+    --robe: #374151; --dark: #1f2937; --pants: #111827; --belt: #b91c1c;
+    --skin: #d4a574; --skin-d: #8b6914; --hair: #111;
+    --halo: #1a1a1a;
   }
-  .tc-fig.horsemane  { --robe:#059669; --dark:#065f46; --halo:#fce7f3; --belt:#b45309; }
-  .tc-fig.wavehands  { --robe:#3b82f6; --dark:#1d4ed8; --halo:#dbeafe; --belt:#6366f1; }
-  .tc-fig.pushups    { --robe:#ef4444; --dark:#b91c1c; --halo:#fef2f2; --belt:#1e3a8a; --chi-a:#f87171; --chi-b:#fbbf24; }
-  .tc-fig.plank      { --robe:#6b7280; --dark:#374151; --halo:#f3f4f6; --belt:#1e3a8a; --chi-a:#9ca3af; --chi-b:#6b7280; }
-  .tc-fig.rowing     { --robe:#6366f1; --dark:#4338ca; --halo:#e0e7ff; --belt:#1e3a8a; --chi-a:#818cf8; --chi-b:#a78bfa; }
-  .tc-fig.singlewhip { --robe:#16a34a; --dark:#15803d; --halo:#dcfce7; --belt:#b45309; }
-  .tc-fig.brushknee  { --robe:#dc2626; --dark:#7f1d1d; --halo:#ecfdf5; --belt:#fbbf24; }
-  .tc-fig.graspbird  { --robe:#8b5cf6; --dark:#6d28d9; --halo:#ede9fe; --belt:#fbbf24; }
-  .tc-fig.repulse    { --robe:#d97706; --dark:#92400e; --halo:#fef3c7; --belt:#dc2626; }
-  .tc-fig.closing    { --robe:#db2777; --dark:#831843; --halo:#f3e8ff; --belt:#fbbf24; }
+  .tc-fig.horsemane  { --robe:#1a4731; --dark:#0f3422; --belt:#b45309; }
+  .tc-fig.wavehands  { --robe:#1e3a5f; --dark:#172554; --belt:#1d4ed8; }
+  .tc-fig.pushups    { --robe:#7f1d1d; --dark:#450a0a; --belt:#111827; }
+  .tc-fig.plank      { --robe:#374151; --dark:#1f2937; --belt:#111827; }
+  .tc-fig.rowing     { --robe:#1e1b4b; --dark:#0f0b3e; --belt:#111827; }
+  .tc-fig.singlewhip { --robe:#14532d; --dark:#052e16; --belt:#b45309; }
+  .tc-fig.brushknee  { --robe:#7f1d1d; --dark:#450a0a; --belt:#f59e0b; }
+  .tc-fig.graspbird  { --robe:#312e81; --dark:#1e1b4b; --belt:#f59e0b; }
+  .tc-fig.repulse    { --robe:#78350f; --dark:#451a03; --belt:#dc2626; }
+  .tc-fig.closing    { --robe:#334155; --dark:#1e293b; --belt:#f59e0b; }
   .exercise-description {
-    background: #f7fafc; padding: 14px 16px; border-radius: 12px;
-    line-height: 1.6; margin-bottom: 18px; color: #4a5568; text-align: left; font-size: 0.95em;
+    background: #1f1f1f; padding: 14px 16px; border-radius: 4px;
+    line-height: 1.6; margin-bottom: 16px; color: #a3a3a3; text-align: left; font-size: 0.9em;
+    border: 1px solid #2a2a2a;
   }
-  .timer { font-size: 3.2em; font-weight: 300; color: #4a5568; margin: 12px 0; }
-  .buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .timer {
+    font-size: 3.4em; font-weight: 800; color: #f5f5f5; margin: 12px 0;
+    font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace; letter-spacing: 2px;
+  }
+  .buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
   button {
-    background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none;
-    padding: 13px 26px; border-radius: 30px; font-size: 1em; cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s; font-weight: 500;
+    background: #b91c1c; color: #fff; border: none;
+    padding: 12px 28px; border-radius: 2px; font-size: 0.95em; cursor: pointer;
+    transition: background 0.2s; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
   }
-  button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(118,75,162,0.4); }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
-  button.secondary { background: #e2e8f0; color: #4a5568; }
+  button:hover:not(:disabled) { background: #dc2626; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.secondary { background: #262626; color: #a3a3a3; border: 1px solid #404040; }
+  button.secondary:hover:not(:disabled) { background: #333; }
   .complete { text-align: center; padding: 20px; }
-  .complete h2 { color: #48bb78; margin-bottom: 12px; }
+  .complete h2 { color: #f59e0b; margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>Tai Chi + Styrke</h1>
-  <p class="subtitle">Hybridprogram &mdash; flyt, kjerne og armer (ca. 25 min)</p>
+  <p class="subtitle">Hybridprogram &mdash; flyt, kjerne og armer &mdash; 25 min</p>
   <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
   <div id="content"></div>
 </div>
 <script>
-// Static figure: renders one pose snapshot with given angles
-// a = {aL, fL, aR, fR, sx} (armL, foreL, armR, foreR, shiftX)
 function sfig(cls, a, id) {
   const r = (ang,px,py) => `transform="rotate(${ang} ${px} ${py})"`;
   return `<svg class="tc-fig ${cls}" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <defs><radialGradient id="h${id}" cx="50%" cy="50%" r="50%">
-      <stop offset="30%" stop-color="var(--halo)" stop-opacity="0.9"/>
+      <stop offset="30%" stop-color="var(--halo)" stop-opacity="0.7"/>
       <stop offset="100%" stop-color="var(--halo)" stop-opacity="0"/>
     </radialGradient></defs>
     <circle cx="100" cy="100" r="80" fill="url(#h${id})"/>
-    <ellipse cx="100" cy="185" rx="28" ry="3.5" fill="#000" opacity="0.12"/>
+    <ellipse cx="100" cy="185" rx="28" ry="3.5" fill="#000" opacity="0.3"/>
     <g transform="translate(${a.sx||0},0)">
-      <path d="M92 120 L89 180" stroke="var(--pants)" stroke-width="11" stroke-linecap="round" fill="none"/>
-      <path d="M108 120 L111 180" stroke="var(--pants)" stroke-width="11" stroke-linecap="round" fill="none"/>
+      <path d="M92 120 L89 180" stroke="var(--pants)" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <path d="M108 120 L111 180" stroke="var(--pants)" stroke-width="12" stroke-linecap="round" fill="none"/>
       <path d="M80 66 Q72 96 84 128 L116 128 Q128 96 120 66 Z" fill="var(--robe)" stroke="var(--dark)" stroke-width="1.5"/>
-      <path d="M100 66 Q97 98 100 128" stroke="var(--dark)" stroke-width="1" fill="none" opacity="0.35"/>
-      <rect x="82" y="105" width="36" height="5" fill="var(--belt)" rx="1.5"/>
+      <path d="M100 66 Q97 98 100 128" stroke="var(--dark)" stroke-width="1" fill="none" opacity="0.3"/>
+      <rect x="82" y="105" width="36" height="5" fill="var(--belt)" rx="1"/>
       <g ${r(a.aL,85,68)}>
-        <path d="M85 68 L85 100" stroke="var(--robe)" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <path d="M85 68 L85 100" stroke="var(--robe)" stroke-width="12" stroke-linecap="round" fill="none"/>
         <g ${r(a.fL,85,100)}>
-          <path d="M85 100 L85 130" stroke="var(--robe)" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <path d="M85 100 L85 130" stroke="var(--robe)" stroke-width="10" stroke-linecap="round" fill="none"/>
           <circle cx="85" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
         </g>
       </g>
       <g ${r(a.aR,115,68)}>
-        <path d="M115 68 L115 100" stroke="var(--robe)" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <path d="M115 68 L115 100" stroke="var(--robe)" stroke-width="12" stroke-linecap="round" fill="none"/>
         <g ${r(a.fR,115,100)}>
-          <path d="M115 100 L115 130" stroke="var(--robe)" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <path d="M115 100 L115 130" stroke="var(--robe)" stroke-width="10" stroke-linecap="round" fill="none"/>
           <circle cx="115" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
         </g>
       </g>
       <g>
         <circle cx="100" cy="45" r="16" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1.5"/>
-        <ellipse cx="100" cy="27" rx="10" ry="6" fill="var(--hair)"/>
-        <circle cx="94" cy="44" r="1.4" fill="var(--hair)"/>
-        <circle cx="106" cy="44" r="1.4" fill="var(--hair)"/>
-        <path d="M94 53 Q100 57 106 53" stroke="var(--skin-d)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+        <rect x="88" y="26" width="24" height="10" rx="4" fill="var(--hair)"/>
+        <circle cx="94" cy="44" r="1.5" fill="var(--hair)"/>
+        <circle cx="106" cy="44" r="1.5" fill="var(--hair)"/>
+        <line x1="94" y1="54" x2="106" y2="54" stroke="var(--skin-d)" stroke-width="1.5" stroke-linecap="round"/>
       </g>
     </g>
   </svg>`;
@@ -168,14 +143,13 @@ function sfig(cls, a, id) {
 function pair(cls, from, to, idx) {
   return `<div class="pose-pair">
     <div class="pose-frame"><div class="pose-label">Fra</div>${sfig(cls, from, idx+'a')}</div>
-    <div class="pose-arrow">&rarr;</div>
+    <div class="pose-arrow">&rsaquo;</div>
     <div class="pose-frame"><div class="pose-label">Til</div>${sfig(cls, to, idx+'b')}</div>
   </div>`;
 }
 
 const exercises = [
-  // --- 1. Tai Chi Oppvarming (5 min) ---
-  { section:'warmup', sectionName:'Tai Chi Oppvarming', sectionTime:'5 min',
+  { section:'warmup', sectionName:'Oppvarming', sectionTime:'5 min',
     name:'Åpne Tai Chi', sub:'起势 · Qǐ shì',
     desc:'Stå med føttene i skulderbredde. Pust rolig inn mens du hever armene sakte opp til skulderhøyde, håndflatene ned. Pust ut og senk armene.',
     tip:'Aktiver kjerne, ledd og pust', duration:60, cls:'qishi',
@@ -188,9 +162,7 @@ const exercises = [
     desc:'Stå med føttene parallelt. Før armene foran kroppen i store, myke sirkler – som om du skyver skyer til siden. La overkroppen følge med rolig.',
     duration:120, cls:'wavehands',
     from:{aL:50,fL:30,aR:-50,fR:-30,sx:6}, to:{aL:-50,fL:-30,aR:50,fR:30,sx:-6} },
-
-  // --- 2. Styrkeblokk (10–12 min) ---
-  { section:'strength', sectionName:'Styrkeblokk', sectionTime:'10–12 min · 2–3 runder',
+  { section:'strength', sectionName:'Styrke', sectionTime:'10–12 min · 2–3 runder',
     name:'Push-ups', sub:'Armhevinger',
     desc:'Hold kroppen strak fra hode til hæl. Senk brystet mot gulvet, press deg opp. 8–15 repetisjoner.',
     tip:'Lettere: på knær · Tyngre: 3 sek ned', duration:60, cls:'pushups',
@@ -207,9 +179,7 @@ const exercises = [
     desc:'Strekk en arm ut til siden med "krok-hånd", den andre skyver fremover. Hold stillingen isometrisk 20–30 sekunder per side.',
     tip:'Isometrisk styrke i armer og skuldre', duration:60, cls:'singlewhip',
     from:{aL:0,fL:0,aR:0,fR:0}, to:{aL:90,fL:0,aR:-100,fR:-40,sx:-2} },
-
-  // --- 3. Tai Chi Styrkeflyt (5–6 min) ---
-  { section:'flow', sectionName:'Tai Chi Styrkeflyt', sectionTime:'5–6 min · 10–20% ekstra spenning',
+  { section:'flow', sectionName:'Styrkeflyt', sectionTime:'5–6 min · ekstra spenning',
     name:'Børst knær og skyv', sub:'搂膝拗步 · Lǒu xī ǎo bù',
     desc:'Tråkk frem med ett ben. Før den ene hånden forbi kneet, mens den andre skyves fremover i brysthøyde. Utfør sakte med bevisst muskelspenning.',
     tip:'Hold 10–20% muskelspenning hele tiden', duration:120, cls:'brushknee',
@@ -222,8 +192,6 @@ const exercises = [
     desc:'Gå bakover med kontrollerte skritt. En arm skyver fremover mens den andre trekkes tilbake. Bytt side for hvert skritt.',
     duration:120, cls:'repulse',
     from:{aL:100,fL:-20,aR:-30,fR:20,sx:-3}, to:{aL:-30,fL:20,aR:100,fR:-20,sx:3} },
-
-  // --- 4. Nedtrapping (3–4 min) ---
   { section:'cooldown', sectionName:'Nedtrapping', sectionTime:'3–4 min',
     name:'Åpne Tai Chi', sub:'起势 · Qǐ shì',
     desc:'Gjenta åpningsbevegelsen. Senk tempoet enda mer. Kjenn hvordan kroppen føles etter økten.',
@@ -242,9 +210,9 @@ const bar=document.getElementById('progressBar');
 function render(){
   if(cur>=exercises.length){
     content.innerHTML=`<div class="complete">
-      <h2>Godt gjort!</h2>
-      <p style="margin-bottom:20px;color:#4a5568;">Du har fullført hele hybridøkten – tai chi og styrke!</p>
-      <button onclick="restart()">Start på nytt</button>
+      <h2>Fullf&oslash;rt</h2>
+      <p style="margin-bottom:20px;color:#a3a3a3;">Hele hybridøkten er gjennomført.</p>
+      <button onclick="restart()">Kjør igjen</button>
     </div>`;
     bar.style.width='100%';
     return;
@@ -256,7 +224,7 @@ function render(){
   const illustration=pair(ex.cls, ex.from, ex.to, cur);
   content.innerHTML=`<div class="exercise">
     ${secHtml}
-    <div class="exercise-number">ØVELSE ${cur+1} AV ${exercises.length}</div>
+    <div class="exercise-number">ØVELSE ${cur+1} / ${exercises.length}</div>
     <div class="exercise-name">${ex.name}</div>
     <div class="exercise-sub">${ex.sub}</div>
     ${tipHtml}
