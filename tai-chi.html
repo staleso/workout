@@ -22,61 +22,82 @@
     top: 0;
     z-index: 10;
   }
-  .header-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
   h1 { font-size: 1.1em; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #f5f5f5; }
   .header-timer { font-family: "SF Mono", "Fira Code", monospace; font-size: 1.4em; font-weight: 800; color: #f5f5f5; letter-spacing: 1px; }
+  .back-btn {
+    background: none; border: none; color: #737373; font-size: 0.85em;
+    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; padding: 4px 0; flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
 
   /* ── TIMELINE ── */
-  .timeline-wrap {
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 10px;
-  }
+  .timeline-wrap { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 10px; }
   .timeline-wrap::-webkit-scrollbar { display: none; }
-  .timeline {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    min-width: max-content;
-    padding: 0 2px;
-  }
-  .tl-item {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
+  .timeline { display: flex; align-items: center; min-width: max-content; padding: 0 2px; }
+  .tl-item { display: flex; align-items: center; cursor: pointer; }
   .tl-dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.6em;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    transition: all 0.2s;
-    background: #222;
-    color: #555;
-    border: 1px solid #2a2a2a;
-    position: relative;
+    width: 28px; height: 28px; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6em; font-weight: 800; transition: all 0.2s;
+    background: #222; color: #555; border: 1px solid #2a2a2a;
   }
   .tl-dot.done { background: #1a1a1a; color: #3a3a3a; border-color: #222; }
   .tl-dot.done::after { content: '✓'; font-size: 1.1em; }
   .tl-dot.active { background: #b91c1c; color: #fff; border-color: #dc2626; box-shadow: 0 0 8px #b91c1c88; }
-  .tl-dot.warmup-dot  { border-left: 2px solid #1d4ed8; }
+  .tl-dot.warmup-dot   { border-left: 2px solid #1d4ed8; }
   .tl-dot.strength-dot { border-left: 2px solid #dc2626; }
-  .tl-dot.flow-dot    { border-left: 2px solid #16a34a; }
+  .tl-dot.flow-dot     { border-left: 2px solid #16a34a; }
   .tl-dot.cooldown-dot { border-left: 2px solid #6b7280; }
-  .tl-line {
-    width: 6px; height: 2px; background: #222; flex-shrink: 0;
-  }
+  .tl-line { width: 6px; height: 2px; background: #222; flex-shrink: 0; }
   .tl-line.done { background: #333; }
+
+  /* ── CALENDAR ── */
+  .cal-wrap { padding: 14px; }
+  .cal-month {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .cal-month h2 { font-size: 1em; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #f5f5f5; }
+  .cal-nav {
+    background: #1a1a1a; border: 1px solid #333; color: #a3a3a3;
+    width: 32px; height: 32px; border-radius: 2px; cursor: pointer;
+    font-size: 1em; display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cal-nav:active { background: #222; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-dow {
+    text-align: center; font-size: 0.6em; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: #444;
+    padding: 4px 0;
+  }
+  .cal-day {
+    aspect-ratio: 1; border-radius: 3px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; cursor: pointer;
+    background: #161616; border: 1px solid #222;
+    -webkit-tap-highlight-color: transparent; position: relative;
+    transition: background 0.15s;
+  }
+  .cal-day:active { background: #222; }
+  .cal-day.empty { background: transparent; border-color: transparent; cursor: default; }
+  .cal-day.today { border-color: #b91c1c; }
+  .cal-day.today .cal-day-num { color: #f87171; }
+  .cal-day.done { background: #111; border-color: #1a1a1a; cursor: default; }
+  .cal-day.done .cal-day-num { color: #2a2a2a; }
+  .cal-day.done::after {
+    content: '✓'; position: absolute; font-size: 0.75em;
+    color: #2a2a2a; font-weight: 800;
+  }
+  .cal-day.future { opacity: 0.35; cursor: default; }
+  .cal-day-num { font-size: 0.85em; font-weight: 700; color: #a3a3a3; line-height: 1; }
+  .cal-legend { display: flex; gap: 14px; margin-top: 16px; justify-content: center; flex-wrap: wrap; }
+  .cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.7em; color: #555; }
+  .cal-legend-dot { width: 10px; height: 10px; border-radius: 1px; }
 
   /* ── MAIN ── */
   .main { padding: 12px 14px 24px; }
-
   .section-badge {
     display: inline-block; padding: 3px 10px; border-radius: 2px;
     font-size: 0.65em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
@@ -85,64 +106,46 @@
   .section-badge.strength { background: #7f1d1d; color: #fca5a5; }
   .section-badge.flow     { background: #14532d; color: #86efac; }
   .section-badge.cooldown { background: #374151; color: #d1d5db; }
-
   .exercise-number { color: #525252; font-weight: 700; letter-spacing: 3px; font-size: 0.7em; margin-bottom: 4px; }
   .exercise-name { font-size: 1.35em; color: #f5f5f5; font-weight: 800; line-height: 1.2; margin-bottom: 2px; }
   .exercise-sub { color: #737373; font-size: 0.8em; letter-spacing: 0.5px; margin-bottom: 8px; }
-
   .exercise-tip {
     display: inline-block; background: #1a1a1a; border: 1px solid #333;
     color: #f59e0b; padding: 4px 10px; border-radius: 2px; font-size: 0.75em; margin-bottom: 10px; font-weight: 600;
   }
-
-  /* ── ILLUSTRATION ── */
-  .illustration {
-    background: #0f0f0f; border-radius: 4px; padding: 8px; margin-bottom: 10px; border: 1px solid #1f1f1f;
-  }
+  .illustration { background: #0f0f0f; border-radius: 4px; padding: 8px; margin-bottom: 10px; border: 1px solid #1f1f1f; }
   .pose-pair { display: flex; align-items: center; justify-content: center; gap: 4px; }
   .pose-frame { text-align: center; flex: 1; }
   .pose-label { font-size: 0.6em; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: #444; margin-bottom: 2px; }
   .pose-arrow { font-size: 1.4em; color: #b91c1c; font-weight: 700; flex-shrink: 0; }
   .pose-frame svg { width: 100%; height: auto; max-width: 120px; display: block; margin: 0 auto; }
-
-  .tc-fig {
-    --robe: #374151; --dark: #1f2937; --pants: #111827; --belt: #b91c1c;
-    --skin: #d4a574; --skin-d: #8b6914; --hair: #111; --halo: #1a1a1a;
-  }
-  .tc-fig.horsemane  { --robe:#1a4731; --dark:#0f3422; --belt:#b45309; }
-  .tc-fig.wavehands  { --robe:#1e3a5f; --dark:#172554; --belt:#1d4ed8; }
-  .tc-fig.pushups    { --robe:#7f1d1d; --dark:#450a0a; --belt:#111827; }
-  .tc-fig.plank      { --robe:#374151; --dark:#1f2937; --belt:#111827; }
-  .tc-fig.rowing     { --robe:#1e1b4b; --dark:#0f0b3e; --belt:#111827; }
-  .tc-fig.singlewhip { --robe:#14532d; --dark:#052e16; --belt:#b45309; }
-  .tc-fig.brushknee  { --robe:#7f1d1d; --dark:#450a0a; --belt:#f59e0b; }
-  .tc-fig.graspbird  { --robe:#312e81; --dark:#1e1b4b; --belt:#f59e0b; }
-  .tc-fig.repulse    { --robe:#78350f; --dark:#451a03; --belt:#dc2626; }
-  .tc-fig.closing    { --robe:#334155; --dark:#1e293b; --belt:#f59e0b; }
-
-  /* ── EXERCISE TIMER PROGRESS ── */
+  .tc-fig { --robe:#374151;--dark:#1f2937;--pants:#111827;--belt:#b91c1c;--skin:#d4a574;--skin-d:#8b6914;--hair:#111;--halo:#1a1a1a; }
+  .tc-fig.horsemane  { --robe:#1a4731;--dark:#0f3422;--belt:#b45309; }
+  .tc-fig.wavehands  { --robe:#1e3a5f;--dark:#172554;--belt:#1d4ed8; }
+  .tc-fig.pushups    { --robe:#7f1d1d;--dark:#450a0a;--belt:#111827; }
+  .tc-fig.plank      { --robe:#374151;--dark:#1f2937;--belt:#111827; }
+  .tc-fig.rowing     { --robe:#1e1b4b;--dark:#0f0b3e;--belt:#111827; }
+  .tc-fig.singlewhip { --robe:#14532d;--dark:#052e16;--belt:#b45309; }
+  .tc-fig.brushknee  { --robe:#7f1d1d;--dark:#450a0a;--belt:#f59e0b; }
+  .tc-fig.graspbird  { --robe:#312e81;--dark:#1e1b4b;--belt:#f59e0b; }
+  .tc-fig.repulse    { --robe:#78350f;--dark:#451a03;--belt:#dc2626; }
+  .tc-fig.closing    { --robe:#334155;--dark:#1e293b;--belt:#f59e0b; }
   .ex-progress { background: #1a1a1a; height: 4px; border-radius: 2px; overflow: hidden; margin-bottom: 10px; }
-  .ex-progress-bar { background: linear-gradient(90deg, #b91c1c, #f59e0b); height: 100%; width: 100%; transition: width 1s linear; }
-
+  .ex-progress-bar { background: linear-gradient(90deg, #b91c1c, #f59e0b); height: 100%; transition: width 1s linear; }
   .exercise-description {
     background: #141414; padding: 10px 12px; border-radius: 4px;
-    line-height: 1.55; margin-bottom: 10px; color: #8a8a8a; text-align: left; font-size: 0.82em;
-    border: 1px solid #222;
+    line-height: 1.55; margin-bottom: 10px; color: #8a8a8a; text-align: left; font-size: 0.82em; border: 1px solid #222;
   }
-
-  /* ── BUTTONS ── */
   .buttons { display: flex; gap: 8px; }
   button {
     flex: 1; background: #b91c1c; color: #fff; border: none;
     padding: 14px 10px; border-radius: 2px; font-size: 0.9em; cursor: pointer;
-    transition: background 0.2s; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+    font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
     -webkit-tap-highlight-color: transparent;
   }
   button:active { background: #dc2626; }
   button.secondary { background: #1a1a1a; color: #737373; border: 1px solid #333; flex: 0.6; }
   button.secondary:active { background: #222; }
-
-  /* ── COMPLETE ── */
   .complete { text-align: center; padding: 40px 20px; }
   .complete h2 { color: #f59e0b; margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; font-size: 1.4em; }
   .complete p { color: #525252; margin-bottom: 28px; font-size: 0.9em; }
@@ -150,19 +153,99 @@
 </head>
 <body>
 
-<div class="header">
+<div class="header" id="header">
   <div class="header-top">
-    <h1>Tai Chi + Styrke</h1>
-    <div class="header-timer" id="headerTimer">0:00</div>
+    <button class="back-btn" id="backBtn" onclick="goCalendar()" style="display:none">← Kalender</button>
+    <h1 id="headerTitle">Tai Chi + Styrke</h1>
+    <div class="header-timer" id="headerTimer" style="display:none">0:00</div>
   </div>
-  <div class="timeline-wrap">
+  <div class="timeline-wrap" id="timelineWrap" style="display:none">
     <div class="timeline" id="timeline"></div>
   </div>
 </div>
 
-<div class="main" id="content"></div>
+<div id="app"></div>
 
 <script>
+// ── STORAGE ──
+const STORE_KEY = 'taichi_done';
+function loadDone() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch { return {}; }
+}
+function saveDay(dateStr) {
+  const d = loadDone(); d[dateStr] = true;
+  localStorage.setItem(STORE_KEY, JSON.stringify(d));
+}
+function isDone(dateStr) { return !!loadDone()[dateStr]; }
+function dateKey(y, m, d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+
+// ── CALENDAR ──
+const MONTHS_NO = ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'];
+const DAYS_NO = ['Ma','Ti','On','To','Fr','Lø','Sø'];
+let calYear, calMonth;
+
+function initCal() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+}
+
+function renderCalendar() {
+  document.getElementById('backBtn').style.display = 'none';
+  document.getElementById('headerTimer').style.display = 'none';
+  document.getElementById('timelineWrap').style.display = 'none';
+  document.getElementById('headerTitle').textContent = 'Tai Chi + Styrke';
+
+  const now = new Date();
+  const today = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  // Convert Sunday=0 to Monday=0
+  const startOffset = (firstDay + 6) % 7;
+
+  const dowHtml = DAYS_NO.map(d => `<div class="cal-dow">${d}</div>`).join('');
+  const emptyHtml = Array(startOffset).fill('<div class="cal-day empty"></div>').join('');
+
+  const daysHtml = Array.from({length: daysInMonth}, (_, i) => {
+    const day = i + 1;
+    const key = dateKey(calYear, calMonth, day);
+    const isToday = calYear===today.y && calMonth===today.m && day===today.d;
+    const isFuture = new Date(calYear, calMonth, day) > new Date(today.y, today.m, today.d);
+    const done = isDone(key);
+    let cls = 'cal-day';
+    if (done) cls += ' done';
+    else if (isToday) cls += ' today';
+    else if (isFuture) cls += ' future';
+    const onclick = (!done && !isFuture) ? `onclick="startWorkout('${key}')"` : '';
+    return `<div class="${cls}" ${onclick}><span class="cal-day-num">${day}</span></div>`;
+  }).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="cal-wrap">
+      <div class="cal-month">
+        <button class="cal-nav" onclick="calNav(-1)">‹</button>
+        <h2>${MONTHS_NO[calMonth]} ${calYear}</h2>
+        <button class="cal-nav" onclick="calNav(1)">›</button>
+      </div>
+      <div class="cal-grid">
+        ${dowHtml}${emptyHtml}${daysHtml}
+      </div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#b91c1c;border:1px solid #dc2626"></div> I dag</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#111;border:1px solid #1a1a1a"></div> Fullf&oslash;rt</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#161616;border:1px solid #333"></div> Tilgjengelig</div>
+      </div>
+    </div>`;
+}
+
+function calNav(dir) {
+  calMonth += dir;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+// ── WORKOUT ──
 function sfig(cls, a, id) {
   const r = (ang,px,py) => `transform="rotate(${ang} ${px} ${py})"`;
   return `<svg class="tc-fig ${cls}" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -273,12 +356,24 @@ const exercises = [
     from:{aL:10,fL:0,aR:-10,fR:0}, to:{aL:0,fL:0,aR:0,fR:0} }
 ];
 
-let cur=0, timeLeft=0, timerId=null, running=false;
-const content=document.getElementById('content');
-const headerTimer=document.getElementById('headerTimer');
-const tlEl=document.getElementById('timeline');
+let cur=0, timeLeft=0, timerId=null, running=false, workoutDateKey=null;
+
+function startWorkout(key) {
+  workoutDateKey = key;
+  cur = 0; timeLeft = 0; running = false; clearInterval(timerId);
+  document.getElementById('backBtn').style.display = 'block';
+  document.getElementById('headerTimer').style.display = 'block';
+  document.getElementById('timelineWrap').style.display = 'block';
+  renderWorkout();
+}
+
+function goCalendar() {
+  clearInterval(timerId); running = false;
+  renderCalendar();
+}
 
 function renderTimeline() {
+  const tlEl = document.getElementById('timeline');
   tlEl.innerHTML = exercises.map((ex,i) => {
     const sec = sectionOf(i);
     let cls = sec+'-dot';
@@ -291,34 +386,37 @@ function renderTimeline() {
       ${line}
     </div>`;
   }).join('');
-  // scroll active dot into view
   const activeDot = tlEl.querySelector('.active');
   if (activeDot) activeDot.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
 }
 
 function fmt(s){ return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0'); }
 
-function render() {
+function renderWorkout() {
   renderTimeline();
+  const headerTimer = document.getElementById('headerTimer');
+
   if (cur >= exercises.length) {
-    content.innerHTML = `<div class="complete">
-      <h2>Fullf&oslash;rt</h2>
-      <p>Hele hybridøkten er gjennomført.</p>
-      <button onclick="restart()">Kjør igjen</button>
-    </div>`;
+    if (workoutDateKey) saveDay(workoutDateKey);
+    document.getElementById('app').innerHTML = `
+      <div class="main"><div class="complete">
+        <h2>Fullf&oslash;rt</h2>
+        <p>Dagen er registrert i kalenderen.</p>
+        <button onclick="goCalendar()">Tilbake til kalender</button>
+      </div></div>`;
     headerTimer.textContent = '0:00';
     return;
   }
+
   const ex = exercises[cur];
   if (timeLeft === 0) timeLeft = ex.duration;
   headerTimer.textContent = fmt(timeLeft);
 
   const secHtml = ex.section
     ? `<div class="section-badge ${ex.section}">${ex.sectionName} · ${ex.sectionTime}</div>` : '';
-  const tipHtml = ex.tip
-    ? `<div class="exercise-tip">${ex.tip}</div>` : '';
+  const tipHtml = ex.tip ? `<div class="exercise-tip">${ex.tip}</div>` : '';
 
-  content.innerHTML = `
+  document.getElementById('app').innerHTML = `<div class="main">
     ${secHtml}
     <div class="exercise-number">ØVELSE ${cur+1} / ${exercises.length}</div>
     <div class="exercise-name">${ex.name}</div>
@@ -330,11 +428,12 @@ function render() {
     <div class="buttons">
       <button id="toggleBtn" onclick="toggle()">${running?'Pause':'Start'}</button>
       <button class="secondary" onclick="next()">${cur===exercises.length-1?'Fullfør':'Neste ›'}</button>
-    </div>`;
+    </div>
+  </div>`;
 }
 
 function updateTimer() {
-  headerTimer.textContent = fmt(timeLeft);
+  document.getElementById('headerTimer').textContent = fmt(timeLeft);
   const exBar = document.getElementById('exBar');
   const ex = exercises[cur];
   if (exBar && ex) exBar.style.width = (timeLeft / ex.duration * 100) + '%';
@@ -343,10 +442,12 @@ function updateTimer() {
 function toggle() {
   if (running) {
     clearInterval(timerId); running = false;
-    document.getElementById('toggleBtn').textContent = 'Start';
+    const btn = document.getElementById('toggleBtn');
+    if (btn) btn.textContent = 'Start';
   } else {
     running = true;
-    document.getElementById('toggleBtn').textContent = 'Pause';
+    const btn = document.getElementById('toggleBtn');
+    if (btn) btn.textContent = 'Pause';
     timerId = setInterval(() => {
       timeLeft--;
       updateTimer();
@@ -355,11 +456,12 @@ function toggle() {
   }
 }
 
-function next() { clearInterval(timerId); running = false; cur++; timeLeft = 0; render(); }
-function restart() { cur = 0; timeLeft = 0; running = false; clearInterval(timerId); render(); }
-function jumpTo(i) { clearInterval(timerId); running = false; cur = i; timeLeft = 0; render(); }
+function next() { clearInterval(timerId); running = false; cur++; timeLeft = 0; renderWorkout(); }
+function jumpTo(i) { clearInterval(timerId); running = false; cur = i; timeLeft = 0; renderWorkout(); }
 
-render();
+// ── INIT ──
+initCal();
+renderCalendar();
 </script>
 </body>
 </html>
