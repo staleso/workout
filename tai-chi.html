@@ -104,7 +104,7 @@
     font-size: 0.6em; font-weight: 800; transition: all 0.2s;
     background: var(--tl-idle); color: var(--text4); border: 1px solid var(--border2);
   }
-  .tl-dot.done { background: var(--tl-done); color: var(--tl-done-c); border-color: var(--border); }
+  .tl-dot.done { background: #14532d; color: #4ade80; border-color: #166534; }
   .tl-dot.done::after { content: '✓'; font-size: 1.1em; }
   .tl-dot.active { background: var(--accent); color: #fff; border-color: var(--accent2); box-shadow: 0 0 8px #b91c1c88; }
   .tl-dot.warmup-dot   { border-left: 2px solid #1d4ed8; }
@@ -199,6 +199,37 @@
   button:active { background: var(--accent2); }
   button.secondary { background: var(--bg4); color: var(--text3); border: 1px solid var(--border3); flex: 0.6; }
   button.secondary:active { background: var(--border); }
+  .cal-day.partial { border-color: #166534; }
+  .cal-day.partial .cal-day-num { color: #4ade80; }
+  .cal-day-progress {
+    position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+    width: 16px; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden;
+  }
+  .cal-day-progress-bar { background: #4ade80; height: 100%; border-radius: 1px; }
+
+  /* ── DAY DETAIL ── */
+  .day-detail { padding: 14px; }
+  .day-detail h2 { font-size: 1em; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--text); margin-bottom: 4px; }
+  .day-detail-sub { font-size: 0.75em; color: var(--text4); margin-bottom: 14px; }
+  .day-ex-list { list-style: none; }
+  .day-ex-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 3px;
+    margin-bottom: 4px;
+  }
+  .day-ex-item.ex-done { opacity: 0.7; }
+  .day-ex-check { width: 22px; height: 22px; border-radius: 2px; border: 2px solid var(--border3);
+    display: flex; align-items: center; justify-content: center; font-size: 0.7em; flex-shrink: 0; color: transparent; }
+  .day-ex-item.ex-done .day-ex-check { background: #14532d; border-color: #166534; color: #4ade80; }
+  .day-ex-info { flex: 1; min-width: 0; }
+  .day-ex-name { font-size: 0.85em; font-weight: 700; color: var(--text); }
+  .day-ex-sub { font-size: 0.7em; color: var(--text4); }
+  .day-ex-section {
+    font-size: 0.55em; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 2px; margin-bottom: 6px; display: inline-block;
+  }
+  .day-actions { margin-top: 14px; display: flex; gap: 8px; }
+
   .complete { text-align: center; padding: 40px 20px; }
   .complete h2 { color: #f59e0b; margin-bottom: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; font-size: 1.4em; }
   .complete p { color: var(--text4); margin-bottom: 28px; font-size: 0.9em; }
@@ -238,15 +269,19 @@ function toggleMode() {
 })();
 
 // ── STORAGE ──
-const STORE_KEY = 'taichi_done';
-function loadDone() {
+const STORE_KEY = 'taichi_progress';
+function loadAll() {
   try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch { return {}; }
 }
-function saveDay(dateStr) {
-  const d = loadDone(); d[dateStr] = true;
-  localStorage.setItem(STORE_KEY, JSON.stringify(d));
+function loadDay(dateStr) { return loadAll()[dateStr] || []; }
+function saveExercise(dateStr, idx) {
+  const all = loadAll();
+  if (!all[dateStr]) all[dateStr] = [];
+  if (!all[dateStr].includes(idx)) all[dateStr].push(idx);
+  localStorage.setItem(STORE_KEY, JSON.stringify(all));
 }
-function isDone(dateStr) { return !!loadDone()[dateStr]; }
+function isDone(dateStr) { return loadDay(dateStr).length >= exercises.length; }
+function dayProgress(dateStr) { return loadDay(dateStr).length; }
 function dateKey(y, m, d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
 
 // ── CALENDAR ──
@@ -282,12 +317,18 @@ function renderCalendar() {
     const isToday = calYear===today.y && calMonth===today.m && day===today.d;
     const isFuture = new Date(calYear, calMonth, day) > new Date(today.y, today.m, today.d);
     const done = isDone(key);
+    const prog = dayProgress(key);
     let cls = 'cal-day';
+    let progHtml = '';
     if (done) cls += ' done';
-    else if (isToday) cls += ' today';
-    else if (isFuture) cls += ' future';
-    const onclick = (!done && !isFuture) ? `onclick="startWorkout('${key}')"` : '';
-    return `<div class="${cls}" ${onclick}><span class="cal-day-num">${day}</span></div>`;
+    else if (prog > 0) {
+      cls += ' partial';
+      progHtml = `<div class="cal-day-progress"><div class="cal-day-progress-bar" style="width:${(prog/exercises.length*100)}%"></div></div>`;
+    }
+    if (!done && !prog && isToday) cls += ' today';
+    if (isFuture) cls += ' future';
+    const onclick = !isFuture ? `onclick="openDay('${key}')"` : '';
+    return `<div class="${cls}" ${onclick}><span class="cal-day-num">${day}</span>${progHtml}</div>`;
   }).join('');
 
   document.getElementById('app').innerHTML = `
@@ -428,9 +469,76 @@ const exercises = [
 
 let cur=0, timeLeft=0, timerId=null, running=false, workoutDateKey=null;
 
+function openDay(key) {
+  const prog = loadDay(key);
+  if (prog.length === 0 && !isDone(key)) {
+    startWorkout(key);
+    return;
+  }
+  showDayDetail(key);
+}
+
+function showDayDetail(key) {
+  clearInterval(timerId); running = false;
+  workoutDateKey = key;
+  document.getElementById('backBtn').style.display = 'block';
+  document.getElementById('headerTimer').style.display = 'none';
+  document.getElementById('timelineWrap').style.display = 'none';
+  document.getElementById('headerTitle').textContent = key;
+
+  const prog = loadDay(key);
+  const done = isDone(key);
+  const secColors = {warmup:'#1e3a5f',strength:'#7f1d1d',flow:'#14532d',cooldown:'#374151'};
+  const secTextColors = {warmup:'#93c5fd',strength:'#fca5a5',flow:'#86efac',cooldown:'#d1d5db'};
+  let lastSection = '';
+
+  const listHtml = exercises.map((ex, i) => {
+    const exDone = prog.includes(i);
+    const sec = sectionOf(i);
+    let secHtml = '';
+    if (ex.section && ex.section !== lastSection) {
+      lastSection = ex.section;
+      secHtml = `<div class="day-ex-section" style="background:${secColors[ex.section]};color:${secTextColors[ex.section]}">${ex.sectionName}</div>`;
+    }
+    return `${secHtml}<div class="day-ex-item${exDone?' ex-done':''}">
+      <div class="day-ex-check">${exDone?'✓':''}</div>
+      <div class="day-ex-info">
+        <div class="day-ex-name">${i+1}. ${ex.name}</div>
+        <div class="day-ex-sub">${ex.sub}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const firstIncomplete = exercises.findIndex((_, i) => !prog.includes(i));
+  const resumeBtn = !done && firstIncomplete >= 0
+    ? `<button onclick="resumeWorkout('${key}', ${firstIncomplete})">Fortsett trening</button>` : '';
+
+  document.getElementById('app').innerHTML = `<div class="day-detail">
+    <h2>${done ? 'Fullført' : prog.length + ' av ' + exercises.length + ' øvelser'}</h2>
+    <div class="day-detail-sub">${key}</div>
+    <div class="day-ex-list">${listHtml}</div>
+    <div class="day-actions">
+      ${resumeBtn}
+      <button class="secondary" onclick="goCalendar()">← Kalender</button>
+    </div>
+  </div>`;
+}
+
 function startWorkout(key) {
   workoutDateKey = key;
-  cur = 0; timeLeft = 0; running = false; clearInterval(timerId);
+  const prog = loadDay(key);
+  const firstIncomplete = exercises.findIndex((_, i) => !prog.includes(i));
+  cur = firstIncomplete >= 0 ? firstIncomplete : 0;
+  timeLeft = 0; running = false; clearInterval(timerId);
+  document.getElementById('backBtn').style.display = 'block';
+  document.getElementById('headerTimer').style.display = 'block';
+  document.getElementById('timelineWrap').style.display = 'block';
+  renderWorkout();
+}
+
+function resumeWorkout(key, idx) {
+  workoutDateKey = key;
+  cur = idx; timeLeft = 0; running = false; clearInterval(timerId);
   document.getElementById('backBtn').style.display = 'block';
   document.getElementById('headerTimer').style.display = 'block';
   document.getElementById('timelineWrap').style.display = 'block';
@@ -444,15 +552,16 @@ function goCalendar() {
 
 function renderTimeline() {
   const tlEl = document.getElementById('timeline');
+  const prog = workoutDateKey ? loadDay(workoutDateKey) : [];
   tlEl.innerHTML = exercises.map((ex,i) => {
     const sec = sectionOf(i);
     let cls = sec+'-dot';
-    if (i < cur) cls += ' done';
+    if (prog.includes(i)) cls += ' done';
     else if (i === cur) cls += ' active';
     const line = i < exercises.length-1
-      ? `<div class="tl-line${i < cur?' done':''}"></div>` : '';
+      ? `<div class="tl-line${prog.includes(i)?' done':''}"></div>` : '';
     return `<div class="tl-item">
-      <div class="tl-dot ${cls}" onclick="jumpTo(${i})">${i < cur ? '' : i+1}</div>
+      <div class="tl-dot ${cls}" onclick="jumpTo(${i})">${prog.includes(i) ? '' : i+1}</div>
       ${line}
     </div>`;
   }).join('');
@@ -467,12 +576,12 @@ function renderWorkout() {
   const headerTimer = document.getElementById('headerTimer');
 
   if (cur >= exercises.length) {
-    if (workoutDateKey) saveDay(workoutDateKey);
     document.getElementById('app').innerHTML = `
       <div class="main"><div class="complete">
         <h2>Fullf&oslash;rt</h2>
-        <p>Dagen er registrert i kalenderen.</p>
-        <button onclick="goCalendar()">Tilbake til kalender</button>
+        <p>Alle øvelser er registrert.</p>
+        <button onclick="showDayDetail(workoutDateKey)">Se oversikt</button>
+        <div style="margin-top:8px"><button class="secondary" onclick="goCalendar()">Tilbake til kalender</button></div>
       </div></div>`;
     headerTimer.textContent = '0:00';
     return;
@@ -526,7 +635,15 @@ function toggle() {
   }
 }
 
-function next() { clearInterval(timerId); running = false; cur++; timeLeft = 0; renderWorkout(); }
+function next() {
+  clearInterval(timerId); running = false;
+  if (workoutDateKey) saveExercise(workoutDateKey, cur);
+  cur++;
+  const prog = workoutDateKey ? loadDay(workoutDateKey) : [];
+  while (cur < exercises.length && prog.includes(cur)) cur++;
+  timeLeft = 0;
+  renderWorkout();
+}
 function jumpTo(i) { clearInterval(timerId); running = false; cur = i; timeLeft = 0; renderWorkout(); }
 
 // ── INIT ──
