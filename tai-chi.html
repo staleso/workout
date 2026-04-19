@@ -94,6 +94,8 @@
   .tc-fig.crane     { --robe:#7c3aed; --dark:#5b21b6; --halo:#dbeafe; --belt:#fbbf24; }
   .tc-fig.brushknee { --robe:#dc2626; --dark:#7f1d1d; --halo:#ecfdf5; --belt:#fbbf24; }
   .tc-fig.pipa      { --robe:#0891b2; --dark:#155e75; --halo:#fef3c7; --belt:#b45309; }
+  .tc-fig.rotatemid { --robe:#0d9488; --dark:#115e59; --halo:#ccfbf1; --belt:#d97706; }
+  .tc-fig.goldenrooster { --robe:#d97706; --dark:#92400e; --halo:#fef9c3; --belt:#dc2626; }
   .tc-fig.closing   { --robe:#db2777; --dark:#831843; --halo:#f3e8ff; --belt:#fbbf24; }
   .exercise-description {
     background: #f7fafc;
@@ -152,7 +154,7 @@
 <body>
   <div class="container">
     <h1>Tai Chi</h1>
-    <p class="subtitle">En rolig øktøkt med 6 øvelser</p>
+    <p class="subtitle">En rolig økt med 8 øvelser</p>
     <div class="progress">
       <div class="progress-bar" id="progressBar"></div>
     </div>
@@ -201,6 +203,22 @@
       foreL: [[0, 35], [0.5, 45], [1, 35]],
       foreR: [[0, -40], [0.5, -50], [1, -40]],
       shift: [[0, -2], [0.5, 0], [1, -2]]
+    },
+    rotatemid: {
+      dur: 5,
+      armL: [[0, 55], [0.5, -55], [1, 55]],
+      armR: [[0, -55], [0.5, 55], [1, -55]],
+      foreL: [[0, 30], [0.5, -30], [1, 30]],
+      foreR: [[0, -30], [0.5, 30], [1, -30]],
+      shift: [[0, 8], [0.5, -8], [1, 8]]
+    },
+    goldenrooster: {
+      dur: 6,
+      armL: [[0, 130], [0.5, 140], [1, 130]],
+      armR: [[0, -10], [0.5, -5], [1, -10]],
+      foreL: [[0, -15], [0.5, -5], [1, -15]],
+      foreR: [[0, 5], [0.5, 10], [1, 5]],
+      shift: [[0, 1], [0.5, -1], [1, 1]]
     },
     closing: {
       dur: 6,
@@ -304,6 +322,8 @@
     crane: makeFigure('crane'),
     brushknee: makeFigure('brushknee'),
     pipa: makeFigure('pipa'),
+    rotatemid: makeFigure('rotatemid'),
+    goldenrooster: makeFigure('goldenrooster'),
     closing: makeFigure('closing')
   };
 
@@ -342,6 +362,20 @@
       description: "Stå med vekten bak, fremre hæl lett hvilende. Løft armene som om du holder en pipa-lutt – høyre hånd foran, venstre i albuehøyde. Hold posisjonen og pust.",
       duration: 60,
       svg: illustrations.pipa
+    },
+    {
+      name: "Rotere midjen",
+      chinese: "转腰 - Zhuǎn yāo",
+      description: "Stå med føttene i skulderbredde. Hold armene foran kroppen som om du holder en ball. Roter overkroppen sakte fra side til side. Bevegelsen drives av magemusklene.",
+      duration: 90,
+      svg: illustrations.rotatemid
+    },
+    {
+      name: "Gullhanen står på ett ben",
+      chinese: "金鸡独立 - Jīn jī dú lì",
+      description: "Løft ett kne høyt opp foran deg mens du løfter motsatt arm. Hold balansen med kjernemuskulaturen. Magen stabiliserer hele bevegelsen. Bytt side.",
+      duration: 90,
+      svg: illustrations.goldenrooster
     },
     {
       name: "Avslutning",
