@@ -166,23 +166,11 @@
     display: inline-block; background: var(--bg4); border: 1px solid var(--border3);
     color: #f59e0b; padding: 4px 10px; border-radius: 2px; font-size: 0.75em; margin-bottom: 10px; font-weight: 600;
   }
-  .illustration { background: var(--bg5); border-radius: 4px; padding: 8px; margin-bottom: 10px; border: 1px solid var(--border); }
-  .pose-pair { display: flex; align-items: center; justify-content: center; gap: 4px; }
-  .pose-frame { text-align: center; flex: 1; }
-  .pose-label { font-size: 0.6em; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: var(--text5); margin-bottom: 2px; }
-  .pose-arrow { font-size: 1.4em; color: var(--accent); font-weight: 700; flex-shrink: 0; }
-  .pose-frame svg { width: 100%; height: auto; max-width: 120px; display: block; margin: 0 auto; }
-  .tc-fig { --robe:#374151;--dark:#1f2937;--pants:#111827;--belt:#b91c1c;--skin:#d4a574;--skin-d:#8b6914;--hair:#111;--halo:#1a1a1a; }
-  .tc-fig.horsemane  { --robe:#1a4731;--dark:#0f3422;--belt:#b45309; }
-  .tc-fig.wavehands  { --robe:#1e3a5f;--dark:#172554;--belt:#1d4ed8; }
-  .tc-fig.pushups    { --robe:#7f1d1d;--dark:#450a0a;--belt:#111827; }
-  .tc-fig.plank      { --robe:#374151;--dark:#1f2937;--belt:#111827; }
-  .tc-fig.rowing     { --robe:#1e1b4b;--dark:#0f0b3e;--belt:#111827; }
-  .tc-fig.singlewhip { --robe:#14532d;--dark:#052e16;--belt:#b45309; }
-  .tc-fig.brushknee  { --robe:#7f1d1d;--dark:#450a0a;--belt:#f59e0b; }
-  .tc-fig.graspbird  { --robe:#312e81;--dark:#1e1b4b;--belt:#f59e0b; }
-  .tc-fig.repulse    { --robe:#78350f;--dark:#451a03;--belt:#dc2626; }
-  .tc-fig.closing    { --robe:#334155;--dark:#1e293b;--belt:#f59e0b; }
+  .illustration {
+    background: var(--bg); border-radius: 6px; margin-bottom: 10px;
+    border: 1px solid var(--border); overflow: hidden;
+  }
+  .illustration svg { width: 100%; height: auto; max-height: 220px; display: block; margin: 0 auto; }
   .ex-progress { background: var(--bg4); height: 4px; border-radius: 2px; overflow: hidden; margin-bottom: 10px; }
   .ex-progress-bar { background: linear-gradient(90deg, #b91c1c, #f59e0b); height: 100%; transition: width 1s linear; }
   .exercise-description {
@@ -357,52 +345,68 @@ function calNav(dir) {
 }
 
 // ── WORKOUT ──
-function sfig(cls, a, id) {
-  const r = (ang,px,py) => `transform="rotate(${ang} ${px} ${py})"`;
-  return `<svg class="tc-fig ${cls}" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <defs><radialGradient id="h${id}" cx="50%" cy="50%" r="50%">
-      <stop offset="30%" stop-color="var(--halo)" stop-opacity="0.7"/>
-      <stop offset="100%" stop-color="var(--halo)" stop-opacity="0"/>
-    </radialGradient></defs>
-    <circle cx="100" cy="100" r="80" fill="url(#h${id})"/>
-    <ellipse cx="100" cy="185" rx="28" ry="3.5" fill="#000" opacity="0.3"/>
-    <g transform="translate(${a.sx||0},0)">
-      <path d="M92 120 L89 180" stroke="var(--pants)" stroke-width="12" stroke-linecap="round" fill="none"/>
-      <path d="M108 120 L111 180" stroke="var(--pants)" stroke-width="12" stroke-linecap="round" fill="none"/>
-      <path d="M80 66 Q72 96 84 128 L116 128 Q128 96 120 66 Z" fill="var(--robe)" stroke="var(--dark)" stroke-width="1.5"/>
-      <path d="M100 66 Q97 98 100 128" stroke="var(--dark)" stroke-width="1" fill="none" opacity="0.3"/>
-      <rect x="82" y="105" width="36" height="5" fill="var(--belt)" rx="1"/>
-      <g ${r(a.aL,85,68)}>
-        <path d="M85 68 L85 100" stroke="var(--robe)" stroke-width="12" stroke-linecap="round" fill="none"/>
-        <g ${r(a.fL,85,100)}>
-          <path d="M85 100 L85 130" stroke="var(--robe)" stroke-width="10" stroke-linecap="round" fill="none"/>
-          <circle cx="85" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
+function animFig(from, to, id, section) {
+  const pal = {
+    warmup:   { f:'#3b82f6', g:'#1d4ed8' },
+    strength: { f:'#ef4444', g:'#b91c1c' },
+    flow:     { f:'#22c55e', g:'#15803d' },
+    cooldown: { f:'#94a3b8', g:'#475569' }
+  };
+  const c = pal[section] || pal.warmup;
+  const D = '3.5s';
+  const S = '0.42 0 0.58 1;0.42 0 0.58 1';
+  const ar = (f,t,cx,cy) =>
+    `<animateTransform attributeName="transform" type="rotate" values="${f} ${cx} ${cy};${t} ${cx} ${cy};${f} ${cx} ${cy}" dur="${D}" repeatCount="indefinite" calcMode="spline" keySplines="${S}"/>`;
+  const fsx = from.sx||0, tsx = to.sx||0;
+  const shiftAnim = (fsx!==tsx) ?
+    `<animateTransform attributeName="transform" type="translate" values="${fsx},0;${tsx},0;${fsx},0" dur="${D}" repeatCount="indefinite" calcMode="spline" keySplines="${S}"/>` :
+    (fsx ? `<animateTransform attributeName="transform" type="translate" values="${fsx},0" dur="0.1s" fill="freeze"/>` : '');
+  const particles = [{x:85,d:'0s',l:'2.4s'},{x:100,d:'0.7s',l:'2.9s'},{x:115,d:'1.4s',l:'2.6s'},{x:92,d:'2s',l:'2.2s'},{x:108,d:'0.3s',l:'2.7s'}]
+    .map(p=>`<circle cx="${p.x}" cy="145" r="1.5" fill="${c.g}" opacity="0">
+      <animate attributeName="cy" values="145;75;25" dur="${p.l}" begin="${p.d}" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.3;0" dur="${p.l}" begin="${p.d}" repeatCount="indefinite"/>
+    </circle>`).join('');
+  return `<svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="au${id}" cx="50%" cy="42%" r="48%">
+        <stop offset="0%" stop-color="${c.g}" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="${c.g}" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="bg${id}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${c.f}"/>
+        <stop offset="100%" stop-color="${c.f}" stop-opacity="0.6"/>
+      </linearGradient>
+    </defs>
+    <circle cx="100" cy="95" r="92" fill="url(#au${id})"/>
+    ${particles}
+    <ellipse cx="100" cy="208" rx="30" ry="4" fill="${c.f}" opacity="0.08">
+      <animate attributeName="rx" values="30;35;30" dur="${D}" repeatCount="indefinite"/>
+    </ellipse>
+    <g>${shiftAnim}
+      <path d="M93 126 Q89 152 87 188 Q86 196 91 197 L97 197 Q100 197 99.5 188 Q99 155 100 133 Z" fill="url(#bg${id})" opacity="0.8"/>
+      <path d="M107 126 Q111 152 113 188 Q114 196 109 197 L103 197 Q100 197 100.5 188 Q101 155 100 133 Z" fill="url(#bg${id})" opacity="0.8"/>
+      <path d="M79 68 Q75 83 76 100 Q78 120 83 132 L117 132 Q122 120 124 100 Q125 83 121 68 Z" fill="url(#bg${id})"/>
+      <path d="M100 72 Q99 102 100 130" stroke="${c.f}" stroke-width="0.5" opacity="0.15" fill="none"/>
+      <rect x="84" y="118" width="32" height="4" rx="2" fill="${c.f}" opacity="0.45"/>
+      <g>${ar(from.aL,to.aL,82,68)}
+        <path d="M77.5 68 Q76 84 77 100 L87 100 Q88 84 86.5 68 Z" fill="url(#bg${id})" opacity="0.92"/>
+        <g>${ar(from.fL,to.fL,82,100)}
+          <path d="M78.5 100 Q77 115 78 130 L86 130 Q87 115 85.5 100 Z" fill="url(#bg${id})" opacity="0.82"/>
+          <circle cx="82" cy="134" r="5.5" fill="${c.f}" opacity="0.7"/>
         </g>
       </g>
-      <g ${r(a.aR,115,68)}>
-        <path d="M115 68 L115 100" stroke="var(--robe)" stroke-width="12" stroke-linecap="round" fill="none"/>
-        <g ${r(a.fR,115,100)}>
-          <path d="M115 100 L115 130" stroke="var(--robe)" stroke-width="10" stroke-linecap="round" fill="none"/>
-          <circle cx="115" cy="134" r="6" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1"/>
+      <g>${ar(from.aR,to.aR,118,68)}
+        <path d="M113.5 68 Q112 84 113 100 L123 100 Q124 84 122.5 68 Z" fill="url(#bg${id})" opacity="0.92"/>
+        <g>${ar(from.fR,to.fR,118,100)}
+          <path d="M114.5 100 Q113 115 114 130 L122 130 Q123 115 121.5 100 Z" fill="url(#bg${id})" opacity="0.82"/>
+          <circle cx="118" cy="134" r="5.5" fill="${c.f}" opacity="0.7"/>
         </g>
       </g>
-      <g>
-        <circle cx="100" cy="45" r="16" fill="var(--skin)" stroke="var(--skin-d)" stroke-width="1.5"/>
-        <rect x="88" y="26" width="24" height="10" rx="4" fill="var(--hair)"/>
-        <circle cx="94" cy="44" r="1.5" fill="var(--hair)"/>
-        <circle cx="106" cy="44" r="1.5" fill="var(--hair)"/>
-        <line x1="94" y1="54" x2="106" y2="54" stroke="var(--skin-d)" stroke-width="1.5" stroke-linecap="round"/>
-      </g>
+      <rect x="96" y="57" width="8" height="13" rx="3" fill="url(#bg${id})"/>
+      <circle cx="100" cy="46" r="14" fill="url(#bg${id})"/>
+      <circle cx="100" cy="46" r="11" fill="${c.f}" opacity="0.08"/>
     </g>
   </svg>`;
-}
-
-function pair(cls, from, to, idx) {
-  return `<div class="pose-pair">
-    <div class="pose-frame"><div class="pose-label">Fra</div>${sfig(cls, from, idx+'a')}</div>
-    <div class="pose-arrow">›</div>
-    <div class="pose-frame"><div class="pose-label">Til</div>${sfig(cls, to, idx+'b')}</div>
-  </div>`;
 }
 
 const sectionOf = i => {
@@ -601,7 +605,7 @@ function renderWorkout() {
     <div class="exercise-name">${ex.name}</div>
     <div class="exercise-sub">${ex.sub}</div>
     ${tipHtml}
-    <div class="illustration">${pair(ex.cls, ex.from, ex.to, cur)}</div>
+    <div class="illustration">${animFig(ex.from, ex.to, cur, sectionOf(cur))}</div>
     <div class="ex-progress"><div class="ex-progress-bar" id="exBar" style="width:${(timeLeft/ex.duration*100)}%"></div></div>
     <div class="exercise-description">${ex.desc}</div>
     <div class="buttons">
