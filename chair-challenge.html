@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=393, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Chair Challenge</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-text-size-adjust: none; }
+  html { width: 393px; overflow-x: hidden; }
+  body {
+    --bg:#0a0a0a;--bg2:#111;--bg3:#161616;--bg4:#1a1a1a;--bg5:#141414;
+    --border:#222;--border2:#2a2a2a;--border3:#333;
+    --text:#e5e5e5;--text2:#a3a3a3;--text3:#737373;--text4:#525252;--text5:#444;
+    --accent:#b45309;--accent2:#d97706;
+    --cal-day:#161616;--cal-done:#111;--cal-done-c:#2a2a2a;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg); min-height: 100vh; min-height: -webkit-fill-available;
+    color: var(--text); width: 393px; overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  body.light {
+    --bg:#f2f2f7;--bg2:#ffffff;--bg3:#ffffff;--bg4:#f2f2f7;--bg5:#ffffff;
+    --border:#e0e0e0;--border2:#d0d0d0;--border3:#c8c8c8;
+    --text:#1a1a1a;--text2:#444;--text3:#666;--text4:#888;--text5:#aaa;
+    --accent:#b45309;--accent2:#d97706;
+    --cal-day:#ffffff;--cal-done:#e8e8e8;--cal-done-c:#bbb;
+  }
+  .header { background:var(--bg2); border-bottom:1px solid var(--border); padding:10px 14px 0; position:sticky; top:0; z-index:10; }
+  .header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; gap:8px; }
+  h1 { font-size:1.1em; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text); }
+  .header-timer { font-family:"SF Mono","Fira Code",monospace; font-size:1.4em; font-weight:800; color:var(--text); letter-spacing:1px; }
+  .back-btn { background:none; border:none; color:var(--text3); font-size:0.85em; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; padding:4px 0; flex-shrink:0; }
+  .mode-btn { background:none; border:none; font-size:1.2em; cursor:pointer; padding:4px; flex-shrink:0; line-height:1; }
+  .timeline-wrap { overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; padding-bottom:10px; }
+  .timeline-wrap::-webkit-scrollbar { display:none; }
+  .timeline { display:flex; align-items:center; min-width:max-content; padding:0 2px; }
+  .tl-item { display:flex; align-items:center; cursor:pointer; }
+  .tl-dot { width:28px; height:28px; border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:0.6em; font-weight:800; transition:all 0.2s; background:var(--border); color:var(--text4); border:1px solid var(--border2); }
+  .tl-dot.done { background:#14532d; color:#4ade80; border-color:#166534; }
+  .tl-dot.done::after { content:'✓'; font-size:1.1em; }
+  .tl-dot.active { background:var(--accent); color:#fff; border-color:var(--accent2); box-shadow:0 0 8px #b4530988; }
+  .tl-dot.warmup-dot { border-left:2px solid #f59e0b; }
+  .tl-dot.upper-dot { border-left:2px solid #ef4444; }
+  .tl-dot.lower-dot { border-left:2px solid #8b5cf6; }
+  .tl-dot.challenge-dot { border-left:2px solid #f97316; }
+  .tl-dot.cooldown-dot { border-left:2px solid #6b7280; }
+  .tl-line { width:6px; height:2px; background:var(--border); flex-shrink:0; }
+  .cal-wrap { padding:14px; }
+  .cal-month { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .cal-month h2 { font-size:1em; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--text); }
+  .cal-nav { background:var(--bg4); border:1px solid var(--border3); color:var(--text2); width:32px; height:32px; border-radius:2px; cursor:pointer; font-size:1em; display:flex; align-items:center; justify-content:center; }
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .cal-dow { text-align:center; font-size:0.6em; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text5); padding:4px 0; }
+  .cal-day { aspect-ratio:1; border-radius:3px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; background:var(--cal-day); border:1px solid var(--border); position:relative; transition:background 0.15s; }
+  .cal-day.empty { background:transparent; border-color:transparent; cursor:default; }
+  .cal-day.today { border-color:var(--accent); }
+  .cal-day.today .cal-day-num { color:#f59e0b; }
+  .cal-day.done { background:var(--cal-done); border-color:var(--cal-done); cursor:default; }
+  .cal-day.done .cal-day-num { color:var(--cal-done-c); }
+  .cal-day.done::after { content:'✓'; position:absolute; font-size:0.75em; color:var(--cal-done-c); font-weight:800; }
+  .cal-day.future { opacity:0.35; cursor:default; }
+  .cal-day.partial { border-color:#166534; }
+  .cal-day.partial .cal-day-num { color:#4ade80; }
+  .cal-day-num { font-size:0.85em; font-weight:700; color:var(--text2); line-height:1; }
+  .cal-day-progress { position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:16px; height:2px; background:var(--border); border-radius:1px; overflow:hidden; }
+  .cal-day-progress-bar { background:#4ade80; height:100%; border-radius:1px; }
+  .cal-legend { display:flex; gap:14px; margin-top:16px; justify-content:center; flex-wrap:wrap; }
+  .cal-legend-item { display:flex; align-items:center; gap:5px; font-size:0.7em; color:var(--text4); }
+  .cal-legend-dot { width:10px; height:10px; border-radius:1px; }
+  .main { padding:12px 14px 24px; }
+  .section-badge { display:inline-block; padding:3px 10px; border-radius:2px; font-size:0.65em; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+  .section-badge.warmup { background:#78350f; color:#fcd34d; }
+  .section-badge.upper { background:#7f1d1d; color:#fca5a5; }
+  .section-badge.lower { background:#2e1065; color:#c4b5fd; }
+  .section-badge.challenge { background:#7c2d12; color:#fdba74; }
+  .section-badge.cooldown { background:#374151; color:#d1d5db; }
+  .exercise-number { color:var(--text4); font-weight:700; letter-spacing:3px; font-size:0.7em; margin-bottom:4px; }
+  .exercise-name { font-size:1.35em; color:var(--text); font-weight:800; line-height:1.2; margin-bottom:2px; }
+  .exercise-sub { color:var(--text3); font-size:0.8em; letter-spacing:0.5px; margin-bottom:8px; }
+  .exercise-tip { display:inline-block; background:var(--bg4); border:1px solid var(--border3); color:#f59e0b; padding:4px 10px; border-radius:2px; font-size:0.75em; margin-bottom:10px; font-weight:600; }
+  .illustration { background:var(--bg); border-radius:6px; margin-bottom:10px; border:1px solid var(--border); overflow:hidden; }
+  .illustration svg { width:100%; height:auto; max-height:220px; display:block; margin:0 auto; }
+  .ex-progress { background:var(--bg4); height:4px; border-radius:2px; overflow:hidden; margin-bottom:10px; }
+  .ex-progress-bar { background:linear-gradient(90deg,#b45309,#f59e0b); height:100%; transition:width 1s linear; }
+  .exercise-description { background:var(--bg5); padding:10px 12px; border-radius:4px; line-height:1.55; margin-bottom:10px; color:var(--text3); text-align:left; font-size:0.82em; border:1px solid var(--border); }
+  .buttons { display:flex; gap:8px; }
+  button { flex:1; background:var(--accent); color:#fff; border:none; padding:14px 10px; border-radius:2px; font-size:0.9em; cursor:pointer; font-weight:800; text-transform:uppercase; letter-spacing:1px; }
+  button:active { background:var(--accent2); }
+  button.secondary { background:var(--bg4); color:var(--text3); border:1px solid var(--border3); flex:0.6; }
+  .day-detail { padding:14px; }
+  .day-detail h2 { font-size:1em; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:var(--text); margin-bottom:4px; }
+  .day-detail-sub { font-size:0.75em; color:var(--text4); margin-bottom:14px; }
+  .day-ex-list { list-style:none; }
+  .day-ex-item { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg3); border:1px solid var(--border); border-radius:3px; margin-bottom:4px; }
+  .day-ex-item.ex-done { opacity:0.7; }
+  .day-ex-check { width:22px; height:22px; border-radius:2px; border:2px solid var(--border3); display:flex; align-items:center; justify-content:center; font-size:0.7em; flex-shrink:0; color:transparent; }
+  .day-ex-item.ex-done .day-ex-check { background:#14532d; border-color:#166534; color:#4ade80; }
+  .day-ex-info { flex:1; min-width:0; }
+  .day-ex-name { font-size:0.85em; font-weight:700; color:var(--text); }
+  .day-ex-sub { font-size:0.7em; color:var(--text4); }
+  .day-ex-section { font-size:0.55em; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:2px 6px; border-radius:2px; margin-bottom:6px; display:inline-block; }
+  .day-actions { margin-top:14px; display:flex; gap:8px; }
+  .complete { text-align:center; padding:40px 20px; }
+  .complete h2 { color:#f59e0b; margin-bottom:12px; font-weight:800; text-transform:uppercase; letter-spacing:3px; font-size:1.4em; }
+  .complete p { color:var(--text4); margin-bottom:28px; font-size:0.9em; }
+</style>
+</head>
+<body>
+<div class="header" id="header">
+  <div class="header-top">
+    <button class="back-btn" id="backBtn" onclick="goCalendar()" style="display:none">← Kalender</button>
+    <h1 id="headerTitle">Chair Challenge</h1>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="header-timer" id="headerTimer" style="display:none">0:00</div>
+      <button class="mode-btn" id="modeBtn" onclick="toggleMode()">☀️</button>
+    </div>
+  </div>
+  <div class="timeline-wrap" id="timelineWrap" style="display:none">
+    <div class="timeline" id="timeline"></div>
+  </div>
+</div>
+<div id="app"></div>
+<script>
+// ── THEME ──
+function toggleMode() {
+  const light = document.body.classList.toggle('light');
+  localStorage.setItem('chair_theme', light ? 'light' : 'dark');
+  document.getElementById('modeBtn').textContent = light ? '🌙' : '☀️';
+}
+(function initTheme() {
+  if (localStorage.getItem('chair_theme') === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('modeBtn').textContent = '🌙';
+  }
+})();
+
+// ── STORAGE ──
+const STORE_KEY = 'chair_progress';
+function loadAll() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch { return {}; } }
+function loadDay(d) { return loadAll()[d] || []; }
+function saveExercise(d, i) {
+  const a = loadAll(); if (!a[d]) a[d] = [];
+  if (!a[d].includes(i)) a[d].push(i);
+  localStorage.setItem(STORE_KEY, JSON.stringify(a));
+}
+function dateKey(y,m,d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+
+// ── FIGURE: Anatomical seated person on chair ──
+function chairFig(muscles, id) {
+  const hi = (g) => muscles.includes(g);
+  const ac = '#ef4444', ac2 = '#dc2626';
+  const base = '#64748b', baseD = '#475569';
+  const skin = '#c9a882', skinD = '#a07d5a';
+  const chair = '#555';
+
+  const muscleColor = (g) => hi(g) ? ac : base;
+  const muscleOp = (g) => hi(g) ? '0.85' : '0.55';
+
+  return `<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="glow${id}" cx="50%" cy="40%" r="50%">
+        <stop offset="0%" stop-color="${hi('abs')||hi('chest')||hi('shoulders')?ac2:baseD}" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="${baseD}" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <circle cx="100" cy="110" r="95" fill="url(#glow${id})"/>
+
+    <!-- CHAIR -->
+    <rect x="58" y="155" width="84" height="6" rx="2" fill="${chair}" opacity="0.6"/>
+    <rect x="62" y="161" width="4" height="45" rx="1" fill="${chair}" opacity="0.5"/>
+    <rect x="134" y="161" width="4" height="45" rx="1" fill="${chair}" opacity="0.5"/>
+    <rect x="130" y="100" width="6" height="62" rx="2" fill="${chair}" opacity="0.4"/>
+    <rect x="60" y="95" width="78" height="4" rx="2" fill="${chair}" opacity="0.3"/>
+
+    <!-- CALVES -->
+    <path d="M78 200 Q76 215 74 235 Q73 242 78 243 L84 243 Q87 242 86 235 Q85 218 84 200 Z" fill="${muscleColor('calves')}" opacity="${muscleOp('calves')}"/>
+    <path d="M116 200 Q118 215 120 235 Q121 242 116 243 L110 243 Q107 242 108 235 Q109 218 110 200 Z" fill="${muscleColor('calves')}" opacity="${muscleOp('calves')}"/>
+
+    <!-- QUADS / THIGHS (horizontal, seated) -->
+    <path d="M82 152 Q68 154 62 158 L62 168 Q68 164 82 162 Z" fill="${muscleColor('quads')}" opacity="${muscleOp('quads')}"/>
+    <path d="M82 162 Q76 178 78 200 L86 200 Q88 178 86 162 Z" fill="${muscleColor('quads')}" opacity="${muscleOp('quads')}"/>
+    <path d="M112 152 Q126 154 132 158 L132 168 Q126 164 112 162 Z" fill="${muscleColor('quads')}" opacity="${muscleOp('quads')}"/>
+    <path d="M112 162 Q118 178 116 200 L108 200 Q106 178 108 162 Z" fill="${muscleColor('quads')}" opacity="${muscleOp('quads')}"/>
+
+    <!-- GLUTES (behind, visible at sides) -->
+    <path d="M80 145 Q75 148 72 155 L82 155 Z" fill="${muscleColor('glutes')}" opacity="${muscleOp('glutes')}"/>
+    <path d="M114 145 Q119 148 122 155 L112 155 Z" fill="${muscleColor('glutes')}" opacity="${muscleOp('glutes')}"/>
+
+    <!-- TORSO / LATS -->
+    <path d="M78 72 Q72 90 74 110 Q76 130 80 148 L114 148 Q118 130 120 110 Q122 90 116 72 Z" fill="${base}" opacity="0.45"/>
+
+    <!-- ABS -->
+    <path d="M90 100 Q89 115 90 140 L104 140 Q105 115 104 100 Z" fill="${muscleColor('abs')}" opacity="${muscleOp('abs')}"/>
+    ${hi('abs') ? `
+    <line x1="97" y1="102" x2="97" y2="138" stroke="${ac2}" stroke-width="0.7" opacity="0.5"/>
+    <line x1="90" y1="108" x2="104" y2="108" stroke="${ac2}" stroke-width="0.5" opacity="0.4"/>
+    <line x1="90" y1="116" x2="104" y2="116" stroke="${ac2}" stroke-width="0.5" opacity="0.4"/>
+    <line x1="90" y1="124" x2="104" y2="124" stroke="${ac2}" stroke-width="0.5" opacity="0.4"/>
+    <line x1="90" y1="132" x2="104" y2="132" stroke="${ac2}" stroke-width="0.5" opacity="0.4"/>` : ''}
+
+    <!-- OBLIQUES -->
+    <path d="M80 102 Q82 95 86 100 L86 140 Q82 142 80 140 Z" fill="${muscleColor('obliques')}" opacity="${muscleOp('obliques')}"/>
+    <path d="M114 102 Q112 95 108 100 L108 140 Q112 142 114 140 Z" fill="${muscleColor('obliques')}" opacity="${muscleOp('obliques')}"/>
+
+    <!-- CHEST / PECS -->
+    <path d="M82 76 Q86 72 97 74 L97 92 Q88 90 82 86 Z" fill="${muscleColor('chest')}" opacity="${muscleOp('chest')}"/>
+    <path d="M112 76 Q108 72 97 74 L97 92 Q106 90 112 86 Z" fill="${muscleColor('chest')}" opacity="${muscleOp('chest')}"/>
+    ${hi('chest') ? `
+    <path d="M85 80 Q91 83 97 84" stroke="${ac2}" stroke-width="0.5" fill="none" opacity="0.5"/>
+    <path d="M109 80 Q103 83 97 84" stroke="${ac2}" stroke-width="0.5" fill="none" opacity="0.5"/>` : ''}
+
+    <!-- SHOULDERS / DELTS -->
+    <circle cx="76" cy="72" r="8" fill="${muscleColor('shoulders')}" opacity="${muscleOp('shoulders')}"/>
+    <circle cx="118" cy="72" r="8" fill="${muscleColor('shoulders')}" opacity="${muscleOp('shoulders')}"/>
+
+    <!-- UPPER ARMS (biceps/triceps) -->
+    <path d="M70 78 Q68 90 69 104 L79 104 Q80 90 78 78 Z" fill="${muscleColor('triceps')}" opacity="${muscleOp('triceps')}"/>
+    <path d="M116 78 Q114 90 115 104 L125 104 Q126 90 124 78 Z" fill="${muscleColor('triceps')}" opacity="${muscleOp('triceps')}"/>
+
+    <!-- FOREARMS -->
+    <path d="M69 104 Q67 116 66 128 L74 128 Q75 116 77 104 Z" fill="${muscleColor('forearms')}" opacity="${muscleOp('forearms')}"/>
+    <path d="M117 104 Q119 116 120 128 L128 128 Q127 116 125 104 Z" fill="${muscleColor('forearms')}" opacity="${muscleOp('forearms')}"/>
+
+    <!-- HANDS -->
+    <circle cx="70" cy="132" r="5" fill="${skin}" opacity="0.7"/>
+    <circle cx="124" cy="132" r="5" fill="${skin}" opacity="0.7"/>
+
+    <!-- NECK -->
+    <rect x="93" y="55" width="8" height="14" rx="3" fill="${skin}" opacity="0.8"/>
+
+    <!-- TRAPS -->
+    <path d="M86 62 Q90 58 97 60 L97 72 L86 72 Z" fill="${muscleColor('back')}" opacity="${muscleOp('back')}"/>
+    <path d="M108 62 Q104 58 97 60 L97 72 L108 72 Z" fill="${muscleColor('back')}" opacity="${muscleOp('back')}"/>
+
+    <!-- HEAD -->
+    <ellipse cx="97" cy="44" rx="14" ry="16" fill="${skin}" opacity="0.8"/>
+    <ellipse cx="97" cy="44" rx="11" ry="13" fill="${skinD}" opacity="0.15"/>
+    <path d="M83 38 Q85 28 97 26 Q109 28 111 38 Q108 34 97 33 Q86 34 83 38 Z" fill="#2a2a2a" opacity="0.7"/>
+
+    <!-- MUSCLE LABEL PULSE for active groups -->
+    ${muscles.length > 0 ? `<circle cx="97" cy="120" r="3" fill="${ac}" opacity="0">
+      <animate attributeName="r" values="3;12;3" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite"/>
+    </circle>` : ''}
+  </svg>`;
+}
+
+// ── EXERCISES ──
+const sectionOf = i => {
+  if (i <= 1) return 'warmup';
+  if (i <= 4) return 'upper';
+  if (i <= 7) return 'lower';
+  if (i <= 9) return 'challenge';
+  return 'cooldown';
+};
+
+const exercises = [
+  { section:'warmup', sectionName:'Oppvarming', sectionTime:'2 min',
+    name:'Sittende armsirkler', sub:'Shoulder warm-up',
+    desc:'Sitt rett opp med føttene i gulvet. Lag store sirkler med armene – 30 sek forover, 30 sek bakover. Hold kjernen aktiv.',
+    tip:'Hold skuldrene nede', duration:60, muscles:['shoulders'] },
+  { name:'Sittende marsj', sub:'Seated march',
+    desc:'Løft knærne vekselvis opp mot brystet i jevnt tempo. Hold ryggen rett og stram magen.',
+    duration:60, muscles:['quads','abs'] },
+
+  { section:'upper', sectionName:'Overkropp', sectionTime:'3 min',
+    name:'Sittende skulderpress', sub:'Overhead press · 3×20 sek',
+    desc:'Press armene rett opp over hodet fra skulderhøyde. Kontroller bevegelsen ned. 3 sett à 20 sekunder.',
+    tip:'Pust ut når du presser opp', duration:60, muscles:['shoulders','triceps'] },
+  { name:'Stol-dips', sub:'Chair dips · 3×15 sek',
+    desc:'Sett hendene på stolkanten bak deg, skyv kroppen frem. Bøy albuene og senk deg ned, press tilbake opp. 3 sett.',
+    tip:'Hold albuene tett inntil kroppen', duration:60, muscles:['triceps','chest'] },
+  { name:'Sittende brystpress', sub:'Isometric chest squeeze · 3×20 sek',
+    desc:'Press håndflatene mot hverandre foran brystet. Hold spenningen i 20 sekunder, slipp, gjenta 3 ganger.',
+    duration:60, muscles:['chest','shoulders'] },
+
+  { section:'lower', sectionName:'Underkropp', sectionTime:'4 min',
+    name:'Stol-squats', sub:'Sit-to-stand · 3×20 sek',
+    desc:'Reis deg fra stolen uten å bruke hendene, sett deg kontrollert ned igjen. Gjenta i jevnt tempo.',
+    tip:'Driv kraften fra hælene', duration:90, muscles:['quads','glutes'] },
+  { name:'Sittende beinløft', sub:'Seated leg raise · 3×20 sek',
+    desc:'Strekk ett ben rett ut foran deg, hold i 5 sekunder, senk ned. Bytt ben. Kjenn det i lår og mage.',
+    duration:60, muscles:['quads','abs'] },
+  { name:'Sittende leggpress', sub:'Calf raises · 3×20 sek',
+    desc:'Sitt med føttene flatt i gulvet. Løft hælene høyt opp, hold 2 sekunder, senk ned. 3 sett à 20 sek.',
+    duration:60, muscles:['calves'] },
+
+  { section:'challenge', sectionName:'Utfordring', sectionTime:'2 min',
+    name:'Sittende crunch', sub:'Seated crunch · 3×20 sek',
+    desc:'Len deg litt tilbake, stram magen hardt og før albuene mot knærne. Hold spenningen, slipp kontrollert tilbake.',
+    tip:'Fokuser på å presse nedre rygg mot stolryggen', duration:60, muscles:['abs','obliques'] },
+  { name:'Sittende vridning', sub:'Seated twist · 3×20 sek',
+    desc:'Hold hendene bak hodet. Vri overkroppen sakte til høyre, tilbake til midten, til venstre. Kjenn obliquene jobbe.',
+    duration:60, muscles:['obliques','abs','back'] },
+
+  { section:'cooldown', sectionName:'Nedtrapping', sectionTime:'2 min',
+    name:'Sittende helkroppsstrekk', sub:'Full body stretch',
+    desc:'Strekk armene over hodet og len deg rolig til hver side. Strekk ut legger, lår og skuldre. Pust dypt og rolig.',
+    tip:'Hold hvert strekk i 15–20 sekunder', duration:90, muscles:[] }
+];
+
+// ── CALENDAR + WORKOUT LOGIC ──
+const MONTHS_NO = ['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember'];
+const DAYS_NO = ['Ma','Ti','On','To','Fr','Lø','Sø'];
+let calYear, calMonth, cur=0, timeLeft=0, timerId=null, running=false, workoutDateKey=null;
+
+function isDone(d) { return loadDay(d).length >= exercises.length; }
+function dayProgress(d) { return loadDay(d).length; }
+
+function initCal() { const n=new Date(); calYear=n.getFullYear(); calMonth=n.getMonth(); }
+
+function renderCalendar() {
+  document.getElementById('backBtn').style.display = 'none';
+  document.getElementById('headerTimer').style.display = 'none';
+  document.getElementById('timelineWrap').style.display = 'none';
+  document.getElementById('headerTitle').textContent = 'Chair Challenge';
+  const now=new Date(), today={y:now.getFullYear(),m:now.getMonth(),d:now.getDate()};
+  const startOffset = (new Date(calYear,calMonth,1).getDay()+6)%7;
+  const dim = new Date(calYear,calMonth+1,0).getDate();
+  const dow = DAYS_NO.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  const emp = Array(startOffset).fill('<div class="cal-day empty"></div>').join('');
+  const days = Array.from({length:dim},(_,i)=>{
+    const day=i+1, key=dateKey(calYear,calMonth,day);
+    const isToday=calYear===today.y&&calMonth===today.m&&day===today.d;
+    const isFuture=new Date(calYear,calMonth,day)>new Date(today.y,today.m,today.d);
+    const done=isDone(key), prog=dayProgress(key);
+    let cls='cal-day', ph='';
+    if(done) cls+=' done';
+    else if(prog>0){ cls+=' partial'; ph=`<div class="cal-day-progress"><div class="cal-day-progress-bar" style="width:${prog/exercises.length*100}%"></div></div>`; }
+    if(!done&&!prog&&isToday) cls+=' today';
+    if(isFuture) cls+=' future';
+    const oc=!isFuture?`onclick="openDay('${key}')"`:'';
+    return `<div class="${cls}" ${oc}><span class="cal-day-num">${day}</span>${ph}</div>`;
+  }).join('');
+  document.getElementById('app').innerHTML=`<div class="cal-wrap">
+    <div class="cal-month">
+      <button class="cal-nav" onclick="calNav(-1)">‹</button>
+      <h2>${MONTHS_NO[calMonth]} ${calYear}</h2>
+      <button class="cal-nav" onclick="calNav(1)">›</button>
+    </div>
+    <div class="cal-grid">${dow}${emp}${days}</div>
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#b45309;border:1px solid #d97706"></div> I dag</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#111;border:1px solid #1a1a1a"></div> Fullf&oslash;rt</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#161616;border:1px solid #333"></div> Tilgjengelig</div>
+    </div>
+  </div>`;
+}
+
+function calNav(dir) {
+  calMonth+=dir;
+  if(calMonth<0){calMonth=11;calYear--;}
+  if(calMonth>11){calMonth=0;calYear++;}
+  renderCalendar();
+}
+
+function openDay(key) {
+  const prog=loadDay(key);
+  if(prog.length===0&&!isDone(key)){startWorkout(key);return;}
+  showDayDetail(key);
+}
+
+function showDayDetail(key) {
+  clearInterval(timerId); running=false; workoutDateKey=key;
+  document.getElementById('backBtn').style.display='block';
+  document.getElementById('headerTimer').style.display='none';
+  document.getElementById('timelineWrap').style.display='none';
+  document.getElementById('headerTitle').textContent=key;
+  const prog=loadDay(key), done=isDone(key);
+  const sc={warmup:'#78350f',upper:'#7f1d1d',lower:'#2e1065',challenge:'#7c2d12',cooldown:'#374151'};
+  const st={warmup:'#fcd34d',upper:'#fca5a5',lower:'#c4b5fd',challenge:'#fdba74',cooldown:'#d1d5db'};
+  let ls='';
+  const list=exercises.map((ex,i)=>{
+    const d=prog.includes(i);
+    let sh='';
+    if(ex.section&&ex.section!==ls){ls=ex.section;sh=`<div class="day-ex-section" style="background:${sc[ex.section]};color:${st[ex.section]}">${ex.sectionName}</div>`;}
+    return `${sh}<div class="day-ex-item${d?' ex-done':''}"><div class="day-ex-check">${d?'✓':''}</div><div class="day-ex-info"><div class="day-ex-name">${i+1}. ${ex.name}</div><div class="day-ex-sub">${ex.sub}</div></div></div>`;
+  }).join('');
+  const fi=exercises.findIndex((_,i)=>!prog.includes(i));
+  const rb=!done&&fi>=0?`<button onclick="resumeWorkout('${key}',${fi})">Fortsett trening</button>`:'';
+  document.getElementById('app').innerHTML=`<div class="day-detail"><h2>${done?'Fullført':prog.length+' av '+exercises.length+' øvelser'}</h2><div class="day-detail-sub">${key}</div><div class="day-ex-list">${list}</div><div class="day-actions">${rb}<button class="secondary" onclick="goCalendar()">← Kalender</button></div></div>`;
+}
+
+function startWorkout(key) {
+  workoutDateKey=key;
+  const prog=loadDay(key), fi=exercises.findIndex((_,i)=>!prog.includes(i));
+  cur=fi>=0?fi:0; timeLeft=0; running=false; clearInterval(timerId);
+  document.getElementById('backBtn').style.display='block';
+  document.getElementById('headerTimer').style.display='block';
+  document.getElementById('timelineWrap').style.display='block';
+  renderWorkout();
+}
+
+function resumeWorkout(key,idx) {
+  workoutDateKey=key; cur=idx; timeLeft=0; running=false; clearInterval(timerId);
+  document.getElementById('backBtn').style.display='block';
+  document.getElementById('headerTimer').style.display='block';
+  document.getElementById('timelineWrap').style.display='block';
+  renderWorkout();
+}
+
+function goCalendar() { clearInterval(timerId); running=false; renderCalendar(); }
+
+function renderTimeline() {
+  const tl=document.getElementById('timeline');
+  const prog=workoutDateKey?loadDay(workoutDateKey):[];
+  tl.innerHTML=exercises.map((ex,i)=>{
+    const sec=sectionOf(i);
+    let cls=sec+'-dot';
+    if(prog.includes(i)) cls+=' done';
+    else if(i===cur) cls+=' active';
+    const line=i<exercises.length-1?`<div class="tl-line"></div>`:'';
+    return `<div class="tl-item"><div class="tl-dot ${cls}" onclick="jumpTo(${i})">${prog.includes(i)?'':i+1}</div>${line}</div>`;
+  }).join('');
+  const ad=tl.querySelector('.active');
+  if(ad) ad.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+
+function fmt(s){return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');}
+
+function renderWorkout() {
+  renderTimeline();
+  const ht=document.getElementById('headerTimer');
+  if(cur>=exercises.length){
+    document.getElementById('app').innerHTML=`<div class="main"><div class="complete"><h2>Fullf&oslash;rt</h2><p>Alle øvelser er registrert.</p><button onclick="showDayDetail(workoutDateKey)">Se oversikt</button><div style="margin-top:8px"><button class="secondary" onclick="goCalendar()">Tilbake til kalender</button></div></div></div>`;
+    ht.textContent='0:00'; return;
+  }
+  const ex=exercises[cur];
+  if(timeLeft===0) timeLeft=ex.duration;
+  ht.textContent=fmt(timeLeft);
+  const secH=ex.section?`<div class="section-badge ${ex.section}">${ex.sectionName} · ${ex.sectionTime}</div>`:'';
+  const tipH=ex.tip?`<div class="exercise-tip">${ex.tip}</div>`:'';
+  document.getElementById('app').innerHTML=`<div class="main">
+    ${secH}
+    <div class="exercise-number">ØVELSE ${cur+1} / ${exercises.length}</div>
+    <div class="exercise-name">${ex.name}</div>
+    <div class="exercise-sub">${ex.sub}</div>
+    ${tipH}
+    <div class="illustration">${chairFig(ex.muscles, cur)}</div>
+    <div class="ex-progress"><div class="ex-progress-bar" id="exBar" style="width:${timeLeft/ex.duration*100}%"></div></div>
+    <div class="exercise-description">${ex.desc}</div>
+    <div class="buttons">
+      <button id="toggleBtn" onclick="toggle()">${running?'Pause':'Start'}</button>
+      <button class="secondary" onclick="next()">${cur===exercises.length-1?'Fullfør':'Neste ›'}</button>
+    </div>
+  </div>`;
+}
+
+function updateTimer() {
+  document.getElementById('headerTimer').textContent=fmt(timeLeft);
+  const b=document.getElementById('exBar'), ex=exercises[cur];
+  if(b&&ex) b.style.width=(timeLeft/ex.duration*100)+'%';
+}
+
+function toggle() {
+  if(running){clearInterval(timerId);running=false;const b=document.getElementById('toggleBtn');if(b)b.textContent='Start';}
+  else{running=true;const b=document.getElementById('toggleBtn');if(b)b.textContent='Pause';
+    timerId=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0){clearInterval(timerId);running=false;next();}},1000);}
+}
+
+function next() {
+  clearInterval(timerId); running=false;
+  if(workoutDateKey) saveExercise(workoutDateKey,cur);
+  cur++;
+  const prog=workoutDateKey?loadDay(workoutDateKey):[];
+  while(cur<exercises.length&&prog.includes(cur)) cur++;
+  timeLeft=0; renderWorkout();
+}
+function jumpTo(i){clearInterval(timerId);running=false;cur=i;timeLeft=0;renderWorkout();}
+
+initCal();
+renderCalendar();
+</script>
+</body>
+</html>
